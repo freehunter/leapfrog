@@ -138,7 +138,7 @@ create: function() {
 
 	this.labelClear = this.game.add.text(35, 170, "Sorry, nothing to buy yet", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu = this.game.add.text(160, 220, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelScore = this.game.add.text(160, 300, ("Score: " +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore = this.game.add.text(160, 300, ("Score: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	
 	this.labelClear.inputEnabled = true;
 	this.labelClear.events.onInputDown.add(this.clearScore, this);
