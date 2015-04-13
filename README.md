@@ -1,7 +1,7 @@
 Leapfrog
 =================
 
-v0.75
+v0.8
 
 Work in progress
 
