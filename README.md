@@ -1,7 +1,7 @@
 Leapfrog
 =================
 
-v0.7
+v0.75
 
 Work in progress
 
@@ -14,6 +14,7 @@ Coins give +1 points and let you triple jump again
 
 TODO:  
 Add basic sounds
-Save scores locall
+Add more store items
+
 
 Game made in Phaser.js

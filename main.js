@@ -10,6 +10,12 @@ if (localStorage.high) {
 	localStorage.high = 0;
 }
 
+if (localStorage.player) {
+	localStorage.player = localStorage.player;
+} else {
+	localStorage.player = "yo";
+}
+
 var High = localStorage.high;
 
 //var High = 0;
@@ -27,8 +33,18 @@ create: function() {
 	var High = localStorage.high;
 	// Display the player on the screen
     this.player = this.game.add.sprite(100, 100, 'player');
-    //this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-    this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	console.log("we will load " + localStorage.player);
+	
+    if (localStorage.player == 'yo')
+	{
+	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	console.log("we loaded the sprite yo")
+	}
+	else if (localStorage.player == 'chicken')
+	{
+	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+	console.log("we loaded the sprite chicken")
+	}
     
     // Add gravity to the player to make it fall
     game.physics.arcade.enable(this.player);
@@ -123,10 +139,12 @@ clearScore: function() {
 }
 
 var shopState = {
-	
+	preload: function() {
+	// Load the player sprite
+    game.load.spritesheet('player', 'assets/player.png', 32, 48);
+},
 create: function() {
-
-
+	
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
     game.scale.setShowAll();
     game.scale.refresh();
@@ -135,24 +153,60 @@ create: function() {
 	game.stage.backgroundColor = '#71c5cf';
        
     this.labelTitle = this.game.add.text(130, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-
-	this.labelClear = this.game.add.text(35, 170, "Sorry, nothing to buy yet", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelPlayer = this.game.add.text(160, 120, "Player", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelChicken = this.game.add.text(160, 170, "Spider chicken", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu = this.game.add.text(160, 220, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelScore = this.game.add.text(160, 300, ("Score: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	
-	this.labelClear.inputEnabled = true;
-	this.labelClear.events.onInputDown.add(this.clearScore, this);
+	this.labelChicken.inputEnabled = true;
+	this.labelChicken.events.onInputDown.add(this.makeChicken, this);
 	this.labelMenu.inputEnabled = true;
 	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
+	this.labelPlayer.inputEnabled = true;
+	this.labelPlayer.events.onInputDown.add(this.makePlayer, this);
+	
+    this.player = this.game.add.sprite(100, 100, 'player');
+	console.log("we are about to load the sprite " + localStorage.player)
+    if (localStorage.yo = "yes")
+	{
+	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	console.log("we loaded the sprite yo")
+	localStorage.chicken = "no";
+	}
+	else if (localStorage.chicken = "yes")
+	{
+	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+	console.log("we loaded the sprite chicken")
+	localStorage.player = "no"
+	}
+	// Add gravity to the player to make it fall
+    game.physics.arcade.enable(this.player);
+    this.player.body.gravity.y = 400; 
+},
+
+update: function(){
+	if (this.player.y > 430) {
+		this.player.body.velocity.y = -450;
+	}
+	this.player.animations.play('right');
 },
 
 returnMenu: function() {
 	game.state.start('menu');
 },
 
-clearScore: function() {
-	localStorage.high = 0;
-	this.labelScore.text = "0";
+makeChicken: function() {
+	delete localStorage.player;
+	localStorage.player = "chicken";
+	console.log(localStorage.player);
+	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+},
+
+makePlayer: function() {
+	delete localStorage.player;
+	localStorage.player = "yo";
+	console.log(localStorage.player);
+	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
 }
 
 }
@@ -168,8 +222,9 @@ var mainState = {
         // Change the background color of the game
         game.stage.backgroundColor = '#71c5cf';
 
-        // Load the player sprite
-        game.load.spritesheet('player', 'assets/player.png', 32, 48);  
+       
+		// Load the player sprite
+		game.load.spritesheet('player', 'assets/player.png', 32, 48);
 
         // Load the platform sprite
         game.load.image('platform', 'assets/platform.png');    
@@ -245,8 +300,18 @@ var mainState = {
 		
 	// Display the player on the screen
         this.player = this.game.add.sprite(100, 100, 'player');
-        //this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-        this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+		console.log("we will load " + localStorage.player);
+	
+		if (localStorage.player == 'yo')
+		{
+			this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+			console.log("we loaded the sprite yo")
+		}
+		else if (localStorage.player == 'chicken')
+		{
+			this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+			console.log("we loaded the sprite chicken")
+		}
         
         // Add gravity to the player to make it fall
         game.physics.arcade.enable(this.player);
@@ -288,7 +353,7 @@ var mainState = {
         // Add a vertical velocity to the player
         if (this.player.body.touching.down || this.jump_set > 0)
         {
-            this.player.body.velocity.y = -250;
+            this.player.body.velocity.y = -175;
             this.player.body.velocity.x = 7;
             this.jump_set -= 1;
             this.labelJumps.text = this.jump_set;
