@@ -60,12 +60,15 @@ create: function() {
 	game.stage.backgroundColor = '#71c5cf';
  
 	//game.load.bitmapFont('font', 'assets/carrier_command.png', 'assets/carrier_command.xml');
-    this.labelTitle = this.game.add.text(90, 50, "Leap Frog", { font: "60px Arial Black"});
+    this.labelTitle = this.game.add.text(190, 70, "Leap Frog", { font: "60px Arial Black"});
 	this.labelTitle.fontWeight = 'bold';
 	this.labelTitle.fontSize = 50;
 	this.labelTitle.stroke = '#000000';
 	this.labelTitle.strokeThickness = 6;
 	this.labelTitle.fill = '#ffffff';
+	twist = 1;
+	this.labelTitle.anchor.set(0.5);
+	
 	//this.labelTitle = this.game.add.bitmapText(100, 100, 'carrier_command','Drag me around !',34);
 	this.labelShop = this.game.add.text(160, 120, "Shop", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelShop.fontWeight = 'bold';
@@ -106,6 +109,29 @@ update: function(){
 		this.player.body.velocity.y = -450;
 	}
 	this.player.animations.play('right');
+	
+	if (this.labelTitle.angle < -10)
+	{
+		twist = 1;
+	}
+	
+	if (this.labelTitle.angle > 10)
+	{
+		twist = 0;
+	}
+	if (twist == 1)
+	{
+		this.labelTitle.rotateSpeed = .5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	if (twist == 0)
+	{
+		this.labelTitle.rotateSpeed = -.5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	//console.log(this.labelTitle.angle);
 },
 
 startGame: function() {
@@ -134,12 +160,13 @@ create: function() {
 
 	game.stage.backgroundColor = '#71c5cf';
        
-    this.labelTitle = this.game.add.text(90, 50, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+    this.labelTitle = this.game.add.text(190, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelTitle.fontWeight = 'bold';
 	this.labelTitle.fontSize = 50;
 	this.labelTitle.stroke = '#000000';
 	this.labelTitle.strokeThickness = 6;
 	this.labelTitle.fill = '#ffffff';
+	this.labelTitle.anchor.set(0.5);
 	this.labelClear = this.game.add.text(160, 170, "Clear Scores", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelClear.fontWeight = 'bold';
 	this.labelClear.stroke = '#000000';
@@ -173,6 +200,30 @@ clearScore: function() {
 		localStorage.high = 0;
 	}
 	this.labelScore.text = "Score: " + localStorage.high;
+},
+
+update: function() {
+	if (this.labelTitle.angle < -10)
+	{
+		twist = 1;
+	}
+	
+	if (this.labelTitle.angle > 10)
+	{
+		twist = 0;
+	}
+	if (twist == 1)
+	{
+		this.labelTitle.rotateSpeed = .5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	if (twist == 0)
+	{
+		this.labelTitle.rotateSpeed = -.5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
 }
 
 }
@@ -191,17 +242,13 @@ create: function() {
 
 	game.stage.backgroundColor = '#71c5cf';
        
-    this.labelTitle = this.game.add.text(90, 50, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+    this.labelTitle = this.game.add.text(190, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelTitle.fontWeight = 'bold';
 	this.labelTitle.fontSize = 50;
 	this.labelTitle.stroke = '#000000';
 	this.labelTitle.strokeThickness = 6;
 	this.labelTitle.fill = '#ffffff';
-	this.labelTitle.fontWeight = 'bold';
-	this.labelTitle.stroke = '#000000';
-	this.labelTitle.strokeThickness = 6;
-	this.labelTitle.fill = '#ffffff';
-	this.labelTitle.inputEnabled = true;
+	this.labelTitle.anchor.set(0.5);
 	this.labelPlayer = this.game.add.text(160, 120, "Player", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelPlayer.fontWeight = 'bold';
 	this.labelPlayer.stroke = '#000000';
@@ -258,6 +305,28 @@ update: function(){
 		this.player.body.velocity.y = -450;
 	}
 	this.player.animations.play('right');
+	
+	if (this.labelTitle.angle < -10)
+	{
+		twist = 1;
+	}
+	
+	if (this.labelTitle.angle > 10)
+	{
+		twist = 0;
+	}
+	if (twist == 1)
+	{
+		this.labelTitle.rotateSpeed = .5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	if (twist == 0)
+	{
+		this.labelTitle.rotateSpeed = -.5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
 },
 
 returnMenu: function() {
