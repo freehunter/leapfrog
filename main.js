@@ -24,7 +24,7 @@ preload: function() {
 },
 
 create: function() {
-
+	var High = localStorage.high;
 	// Display the player on the screen
     this.player = this.game.add.sprite(100, 100, 'player');
     //this.player.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -46,7 +46,7 @@ create: function() {
 	this.labelShop = this.game.add.text(160, 120, "Shop", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelSettings = this.game.add.text(160, 170, "Settings", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelStart = this.game.add.text(160, 220, "Start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelScore = this.game.add.text(160, 300, ("Score:" +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore = this.game.add.text(160, 300, ("Score: " +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	
 	
 	//game.input.onDown.addOnce(this.startGame);
@@ -55,6 +55,10 @@ create: function() {
 	
 	this.labelStart.inputEnabled = true;
 	this.labelStart.events.onInputDown.add(this.startGame, this);
+	
+	this.labelShop.inputEnabled = true;
+	this.labelShop.events.onInputDown.add(this.shopMenu, this);
+	
 },
 
 update: function(){
@@ -69,12 +73,16 @@ startGame: function() {
 },
 
 clickpop: function(item) {
-	game.state.start('extras');
+	game.state.start('settings');
+},
+
+shopMenu: function(item) {
+	game.state.start('shop');
 },
 
 }
 
-var extrasState = {
+var settingsState = {
 	
 create: function() {
 
@@ -86,21 +94,65 @@ create: function() {
 
 	game.stage.backgroundColor = '#71c5cf';
        
-    this.labelTitle = this.game.add.text(130, 110, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-    this.button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 2, 1, 0);
-	this.labelScore = this.game.add.text(110, 300, ("Extras") , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelMenu = this.game.add.text(195, 400, "Tap to start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelMenu.anchor.setTo(0.5, 0.5); 
+    this.labelTitle = this.game.add.text(130, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+
+	this.labelClear = this.game.add.text(160, 170, "Clear Scores", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu = this.game.add.text(160, 220, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore = this.game.add.text(160, 300, ("Score: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	
-	game.input.onDown.addOnce(this.startGame);
+	this.labelClear.inputEnabled = true;
+	this.labelClear.events.onInputDown.add(this.clearScore, this);
+	this.labelMenu.inputEnabled = true;
+	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
 },
 
-startGame: function() {
-	game.state.start('main');
+returnMenu: function() {
+	game.state.start('menu');
 },
 
-actionOnClick: function() {
-	game.state.start('extras');
+clearScore: function() {
+	localStorage.clear();
+	if (localStorage.high) {
+		localStorage.high = Number(localStorage.high) + 0;
+	} else {
+		localStorage.high = 0;
+	}
+	this.labelScore.text = "Score: " + localStorage.high;
+}
+
+}
+
+var shopState = {
+	
+create: function() {
+
+
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    game.scale.setShowAll();
+    game.scale.refresh();
+    game.scale.setScreenSize(true);
+
+	game.stage.backgroundColor = '#71c5cf';
+       
+    this.labelTitle = this.game.add.text(130, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+
+	this.labelClear = this.game.add.text(35, 170, "Sorry, nothing to buy yet", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu = this.game.add.text(160, 220, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore = this.game.add.text(160, 300, ("Score: " +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	
+	this.labelClear.inputEnabled = true;
+	this.labelClear.events.onInputDown.add(this.clearScore, this);
+	this.labelMenu.inputEnabled = true;
+	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
+},
+
+returnMenu: function() {
+	game.state.start('menu');
+},
+
+clearScore: function() {
+	localStorage.high = 0;
+	this.labelScore.text = "0";
 }
 
 }
@@ -132,7 +184,7 @@ var mainState = {
 
     // Function called after 'preload' to setup the game 
     create: function() { 
-        
+        var High = localStorage.high;
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
         game.scale.setShowAll();
         game.scale.setScreenSize(true);
@@ -204,7 +256,9 @@ var mainState = {
     // This function is called 60 times per second
     update: function() {
 	//set high score
+	var High = localStorage.high;
 	this.labelHigh.text = High;
+	
 	if (High > 9)
 	{
 		this.labelHigh.destroy();
@@ -259,11 +313,11 @@ var mainState = {
                 this.labelScore = this.game.add.text(40, 40, this.score, { font: "30px Arial", fill: "#ffffff" });
             }
 	    //high scores
-	    if (this.score > High)
+	    if (this.score > localStorage.high)
 	  	{
-			High = this.score;
-			this.labelHigh.text = High;
-			localStorage.high = Number(localStorage.high) + 1;
+			localStorage.high = this.score;
+			this.labelHigh.text = localStorage.high;
+			//localStorage.high = Number(localStorage.high) + 1;
 		}
         }
     },
@@ -279,11 +333,11 @@ var mainState = {
 		this.jump_set = 3;
 		this.labelJumps.text = this.jump_set;
         this.labelScore.text = this.score;
-		if (this.score > High)
+		if (this.score >localStorage.high)
 	  	{
-			High = this.score;
-			this.labelHigh.text = High;
-			localStorage.high = Number(localStorage.high) + 1;
+			localStorage.high = this.score;
+			this.labelHigh.text = localStorage.high;
+			//localStorage.high = Number(localStorage.high) + 1;
 		}
 		this.coin.kill();
     },
@@ -348,4 +402,6 @@ var mainState = {
 // Add and start the 'main' state to start the game
 game.state.add('main', mainState);  
 game.state.add('menu', menuState);
+game.state.add('settings', settingsState);
+game.state.add('shop', shopState);
 game.state.start('menu'); 
