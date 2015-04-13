@@ -1,18 +1,19 @@
-the-floor-is-lava
+Leapfrog
 =================
 
-v0.8
+v0.4
 
-The floor is lava. Don't touch it!
+Work in progress
 
 Infinite running side-scroller.
-Jump from platform to platform as they collapse under you.
+Leap across the land collecting coins, but don't get too far behind!
 
-Space, click, or tap to jump  
-Every time you touch a platform, you can double jump
+Click or tap to jump  
+Every time you touch a platform, you can triple jump
+Coins give +1 points and let you triple jump again
 
 TODO:  
-Add basic sounds  
-Show highest score above starting platform when beginning game  
+Add basic sounds
+Save scores locall
 
 Game made in Phaser.js
