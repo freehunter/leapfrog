@@ -3,7 +3,42 @@
 //v0.4
 
 var game = new Phaser.Game(400, 490, Phaser.CANVAS, 'gameDiv');
-var High = 0;
+
+if (localStorage.high) {
+	localStorage.high = Number(localStorage.high) + 0;
+} else {
+	localStorage.high = 0;
+}
+
+var High = localStorage.high;
+
+//var High = 0;
+
+
+
+var menuState = {
+create: function() {
+
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+        game.scale.setShowAll();
+        game.scale.refresh();
+        game.scale.setScreenSize(true);
+
+	game.stage.backgroundColor = '#71c5cf';
+       
+        this.labelTitle = this.game.add.text(130, 110, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+        this.labelScore = this.game.add.text(100, 300, ("High Score:" +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu = this.game.add.text(200, 400, "Tap to start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu.anchor.setTo(0.5, 0.5); 
+	
+	game.input.onDown.addOnce(this.startGame);
+},
+
+startGame: function() {
+	game.state.start('main');
+}
+
+}
 
 // Creates a new 'main' state that will contain the game
 var mainState = {
@@ -135,7 +170,7 @@ var mainState = {
         if (this.player.body.touching.down || this.jump_set > 0)
         {
             this.player.body.velocity.y = -250;
-            this.player.body.velocity.x = 20;
+            this.player.body.velocity.x = 7;
             this.jump_set -= 1;
             this.labelJumps.text = this.jump_set;
             
@@ -163,6 +198,7 @@ var mainState = {
 	  	{
 			High = this.score;
 			this.labelHigh.text = High;
+			localStorage.high = Number(localStorage.high) + 1;
 		}
         }
     },
@@ -170,17 +206,19 @@ var mainState = {
     // Restart the game
     restartGame: function() {
         // Start the 'main' state, which restarts the game
-        game.state.start('main');
+        game.state.start('menu');
     },
     
     platfall: function() {
-		this.score = this.score + 5;
+		this.score = this.score + 1;
+		this.jump_set = 3;
 		this.labelJumps.text = this.jump_set;
         this.labelScore.text = this.score;
 		if (this.score > High)
 	  	{
 			High = this.score;
 			this.labelHigh.text = High;
+			localStorage.high = Number(localStorage.high) + 1;
 		}
 		this.coin.kill();
     },
@@ -244,4 +282,5 @@ var mainState = {
 
 // Add and start the 'main' state to start the game
 game.state.add('main', mainState);  
-game.state.start('main'); 
+game.state.add('menu', menuState);
+game.state.start('menu'); 
