@@ -127,7 +127,7 @@ returnMenu: function() {
 },
 
 clearScore: function() {
-	localStorage.clear();
+	localStorage.high = 0;
 	if (localStorage.high) {
 		localStorage.high = Number(localStorage.high) + 0;
 	} else {
