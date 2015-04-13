@@ -27,6 +27,8 @@ var menuState = {
 preload: function() {
 	// Load the player sprite
     game.load.spritesheet('player', 'assets/player.png', 32, 48);
+	//load the font
+	//game.load.bitmapFont('font', 'assets/carrier_command.png', 'assets/carrier_command.xml');
 },
 
 create: function() {
@@ -57,12 +59,34 @@ create: function() {
 
 	game.stage.backgroundColor = '#71c5cf';
  
- 
-    this.labelTitle = this.game.add.text(130, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	//game.load.bitmapFont('font', 'assets/carrier_command.png', 'assets/carrier_command.xml');
+    this.labelTitle = this.game.add.text(90, 50, "Leap Frog", { font: "60px Arial Black"});
+	this.labelTitle.fontWeight = 'bold';
+	this.labelTitle.fontSize = 50;
+	this.labelTitle.stroke = '#000000';
+	this.labelTitle.strokeThickness = 6;
+	this.labelTitle.fill = '#ffffff';
+	//this.labelTitle = this.game.add.bitmapText(100, 100, 'carrier_command','Drag me around !',34);
 	this.labelShop = this.game.add.text(160, 120, "Shop", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelShop.fontWeight = 'bold';
+	this.labelShop.stroke = '#000000';
+	this.labelShop.strokeThickness = 6;
+	this.labelShop.fill = '#ffffff';
 	this.labelSettings = this.game.add.text(160, 170, "Settings", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelSettings.fontWeight = 'bold';
+	this.labelSettings.stroke = '#000000';
+	this.labelSettings.strokeThickness = 6;
+	this.labelSettings.fill = '#ffffff';
 	this.labelStart = this.game.add.text(160, 220, "Start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelStart.fontWeight = 'bold';
+	this.labelStart.stroke = '#000000';
+	this.labelStart.strokeThickness = 6;
+	this.labelStart.fill = '#ffffff';
 	this.labelScore = this.game.add.text(160, 300, ("Score: " +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore.fontWeight = 'bold';
+	this.labelScore.stroke = '#000000';
+	this.labelScore.strokeThickness = 6;
+	this.labelScore.fill = '#ffffff';
 	
 	
 	//game.input.onDown.addOnce(this.startGame);
@@ -110,14 +134,29 @@ create: function() {
 
 	game.stage.backgroundColor = '#71c5cf';
        
-    this.labelTitle = this.game.add.text(130, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-
+    this.labelTitle = this.game.add.text(90, 50, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelTitle.fontWeight = 'bold';
+	this.labelTitle.fontSize = 50;
+	this.labelTitle.stroke = '#000000';
+	this.labelTitle.strokeThickness = 6;
+	this.labelTitle.fill = '#ffffff';
 	this.labelClear = this.game.add.text(160, 170, "Clear Scores", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelClear.fontWeight = 'bold';
+	this.labelClear.stroke = '#000000';
+	this.labelClear.strokeThickness = 6;
+	this.labelClear.fill = '#ffffff';
 	this.labelMenu = this.game.add.text(160, 220, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu.fontWeight = 'bold';
+	this.labelMenu.stroke = '#000000';
+	this.labelMenu.strokeThickness = 6;
+	this.labelMenu.fill = '#ffffff';
 	this.labelScore = this.game.add.text(160, 300, ("Score: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	
-	this.labelClear.inputEnabled = true;
-	this.labelClear.events.onInputDown.add(this.clearScore, this);
+	this.labelScore.fontWeight = 'bold';
+	this.labelScore.stroke = '#000000';
+	this.labelScore.strokeThickness = 6;
+	this.labelScore.fill = '#ffffff';
+	this.labelScore.inputEnabled = true;
+	this.labelScore.events.onInputDown.add(this.clearScore, this);
 	this.labelMenu.inputEnabled = true;
 	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
 },
@@ -152,11 +191,41 @@ create: function() {
 
 	game.stage.backgroundColor = '#71c5cf';
        
-    this.labelTitle = this.game.add.text(130, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+    this.labelTitle = this.game.add.text(90, 50, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelTitle.fontWeight = 'bold';
+	this.labelTitle.fontSize = 50;
+	this.labelTitle.stroke = '#000000';
+	this.labelTitle.strokeThickness = 6;
+	this.labelTitle.fill = '#ffffff';
+	this.labelTitle.fontWeight = 'bold';
+	this.labelTitle.stroke = '#000000';
+	this.labelTitle.strokeThickness = 6;
+	this.labelTitle.fill = '#ffffff';
+	this.labelTitle.inputEnabled = true;
 	this.labelPlayer = this.game.add.text(160, 120, "Player", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelPlayer.fontWeight = 'bold';
+	this.labelPlayer.stroke = '#000000';
+	this.labelPlayer.strokeThickness = 6;
+	this.labelPlayer.fill = '#ffffff';
+	this.labelPlayer.inputEnabled = true;
 	this.labelChicken = this.game.add.text(160, 170, "Spider chicken", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelChicken.fontWeight = 'bold';
+	this.labelChicken.stroke = '#000000';
+	this.labelChicken.strokeThickness = 6;
+	this.labelChicken.fill = '#ffffff';
+	this.labelChicken.inputEnabled = true;
 	this.labelMenu = this.game.add.text(160, 220, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu.fontWeight = 'bold';
+	this.labelMenu.stroke = '#000000';
+	this.labelMenu.strokeThickness = 6;
+	this.labelMenu.fill = '#ffffff';
+	this.labelMenu.inputEnabled = true;
 	this.labelScore = this.game.add.text(160, 300, ("Score: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore.fontWeight = 'bold';
+	this.labelScore.stroke = '#000000';
+	this.labelScore.strokeThickness = 6;
+	this.labelScore.fill = '#ffffff';
+	this.labelScore.inputEnabled = true;
 	
 	this.labelChicken.inputEnabled = true;
 	this.labelChicken.events.onInputDown.add(this.makeChicken, this);
@@ -287,15 +356,42 @@ var mainState = {
         this.labelScoretxt = this.game.add.text(20, 10, "Score", { font: "30px Arial", fill: "#ffffff" });  
         this.labelScore = this.game.add.text(50, 40, "0", { font: "30px Arial", fill: "#ffffff" });  
         this.labelScore.anchor.setTo(0.1, 0.1);
+		this.labelScore.fontWeight = 'bold';
+		this.labelScore.stroke = '#000000';
+		this.labelScore.strokeThickness = 3;
+		this.labelScore.fill = '#ffffff';
+		this.labelScore.inputEnabled = true;
+		this.labelScoretxt.fontWeight = 'bold';
+		this.labelScoretxt.stroke = '#000000';
+		this.labelScoretxt.strokeThickness = 3;
+		this.labelScoretxt.fill = '#ffffff';
+
 
         // high scores
         this.labelHightxt = this.game.add.text(175, 10, "Top", { font: "30px Arial", fill: "#ffffff" });  
         this.labelHigh = this.game.add.text(193, 40, "0", { font: "30px Arial", fill: "#ffffff" });  
         this.labelHigh.anchor.setTo(0.1, 0.1);
+		this.labelHightxt.fontWeight = 'bold';
+		this.labelHightxt.stroke = '#000000';
+		this.labelHightxt.strokeThickness = 3;
+		this.labelHightxt.fill = '#ffffff';
+		this.labelHigh.fontWeight = 'bold';
+		this.labelHigh.stroke = '#000000';
+		this.labelHigh.strokeThickness = 3;
+		this.labelHigh.fill = '#ffffff';
         
         //show number of jumps left in top right of the screen
         this.labelJumps = this.game.add.text(340, 40, "0", { font: "30px Arial", fill: "#ffffff" }); 
         this.labelJumpstxt = this.game.add.text(300, 10, "Jumps", { font: "30px Arial", fill: "#ffffff" });  
+		this.labelJumps.fontWeight = 'bold';
+		this.labelJumps.stroke = '#000000';
+		this.labelJumps.strokeThickness = 3;
+		this.labelJumps.fill = '#ffffff';
+		this.labelJumps.fill = '#ffffff';
+		this.labelJumpstxt.fontWeight = 'bold';
+		this.labelJumpstxt.stroke = '#000000';
+		this.labelJumpstxt.strokeThickness = 3;
+		this.labelJumpstxt.fill = '#ffffff';
         this.labelJumps.text = this.jump_set;
 		
 	// Display the player on the screen
