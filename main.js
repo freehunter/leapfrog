@@ -16,6 +16,18 @@ if (localStorage.player) {
 	localStorage.player = "yo";
 }
 
+if (localStorage.buyspider) {
+	localStorage.buyspider = localStorage.buyspider;
+} else {
+	localStorage.buyspider = "no";
+}
+
+if (localStorage.jump) {
+	localStorage.jump = localStorage.jump;
+} else {         
+	localStorage.jump = Number(-175);
+}
+
 var High = localStorage.high;
 
 //var High = 0;
@@ -70,22 +82,27 @@ create: function() {
 	this.labelTitle.anchor.set(0.5);
 	
 	//this.labelTitle = this.game.add.bitmapText(100, 100, 'carrier_command','Drag me around !',34);
-	this.labelShop = this.game.add.text(160, 120, "Shop", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelCharacters = this.game.add.text(150, 120, "Characters", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelCharacters.fontWeight = 'bold';
+	this.labelCharacters.stroke = '#000000';
+	this.labelCharacters.strokeThickness = 6;
+	this.labelCharacters.fill = '#ffffff';
+	this.labelShop = this.game.add.text(150, 170, "Upgrades", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelShop.fontWeight = 'bold';
 	this.labelShop.stroke = '#000000';
 	this.labelShop.strokeThickness = 6;
 	this.labelShop.fill = '#ffffff';
-	this.labelSettings = this.game.add.text(160, 170, "Settings", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelSettings = this.game.add.text(150, 220, "Settings", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelSettings.fontWeight = 'bold';
 	this.labelSettings.stroke = '#000000';
 	this.labelSettings.strokeThickness = 6;
 	this.labelSettings.fill = '#ffffff';
-	this.labelStart = this.game.add.text(160, 220, "Start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelStart = this.game.add.text(150, 300, "Start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelStart.fontWeight = 'bold';
 	this.labelStart.stroke = '#000000';
 	this.labelStart.strokeThickness = 6;
 	this.labelStart.fill = '#ffffff';
-	this.labelScore = this.game.add.text(160, 300, ("Score: " +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore = this.game.add.text(150, 440, ("Coins: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelScore.fontWeight = 'bold';
 	this.labelScore.stroke = '#000000';
 	this.labelScore.strokeThickness = 6;
@@ -96,11 +113,14 @@ create: function() {
 	this.labelSettings.inputEnabled = true;
 	this.labelSettings.events.onInputDown.add(this.clickpop, this);
 	
+	this.labelShop.inputEnabled = true;
+	this.labelShop.events.onInputDown.add(this.shopMenu, this);
+	
 	this.labelStart.inputEnabled = true;
 	this.labelStart.events.onInputDown.add(this.startGame, this);
 	
-	this.labelShop.inputEnabled = true;
-	this.labelShop.events.onInputDown.add(this.shopMenu, this);
+	this.labelCharacters.inputEnabled = true;
+	this.labelCharacters.events.onInputDown.add(this.characterMenu, this);
 	
 },
 
@@ -142,6 +162,10 @@ clickpop: function(item) {
 	game.state.start('settings');
 },
 
+characterMenu: function(item) {
+	game.state.start('character');
+},
+
 shopMenu: function(item) {
 	game.state.start('shop');
 },
@@ -167,17 +191,17 @@ create: function() {
 	this.labelTitle.strokeThickness = 6;
 	this.labelTitle.fill = '#ffffff';
 	this.labelTitle.anchor.set(0.5);
-	this.labelClear = this.game.add.text(160, 170, "Clear Scores", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelClear = this.game.add.text(150, 170, "Clear Scores", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelClear.fontWeight = 'bold';
 	this.labelClear.stroke = '#000000';
 	this.labelClear.strokeThickness = 6;
 	this.labelClear.fill = '#ffffff';
-	this.labelMenu = this.game.add.text(160, 220, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.fontWeight = 'bold';
 	this.labelMenu.stroke = '#000000';
 	this.labelMenu.strokeThickness = 6;
 	this.labelMenu.fill = '#ffffff';
-	this.labelScore = this.game.add.text(160, 300, ("Score: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore = this.game.add.text(150, 440, ("Coins: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelScore.fontWeight = 'bold';
 	this.labelScore.stroke = '#000000';
 	this.labelScore.strokeThickness = 6;
@@ -228,7 +252,7 @@ update: function() {
 
 }
 
-var shopState = {
+var characterState = {
 	preload: function() {
 	// Load the player sprite
     game.load.spritesheet('player', 'assets/player.png', 32, 48);
@@ -249,25 +273,25 @@ create: function() {
 	this.labelTitle.strokeThickness = 6;
 	this.labelTitle.fill = '#ffffff';
 	this.labelTitle.anchor.set(0.5);
-	this.labelPlayer = this.game.add.text(160, 120, "Player", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelPlayer = this.game.add.text(150, 120, "0c Player", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelPlayer.fontWeight = 'bold';
 	this.labelPlayer.stroke = '#000000';
 	this.labelPlayer.strokeThickness = 6;
 	this.labelPlayer.fill = '#ffffff';
 	this.labelPlayer.inputEnabled = true;
-	this.labelChicken = this.game.add.text(160, 170, "Spider chicken", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelChicken = this.game.add.text(150, 170, "5c Spiderchicken", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelChicken.fontWeight = 'bold';
 	this.labelChicken.stroke = '#000000';
 	this.labelChicken.strokeThickness = 6;
 	this.labelChicken.fill = '#ffffff';
 	this.labelChicken.inputEnabled = true;
-	this.labelMenu = this.game.add.text(160, 220, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.fontWeight = 'bold';
 	this.labelMenu.stroke = '#000000';
 	this.labelMenu.strokeThickness = 6;
 	this.labelMenu.fill = '#ffffff';
 	this.labelMenu.inputEnabled = true;
-	this.labelScore = this.game.add.text(160, 300, ("Score: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore = this.game.add.text(150, 440, ("Coins: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelScore.fontWeight = 'bold';
 	this.labelScore.stroke = '#000000';
 	this.labelScore.strokeThickness = 6;
@@ -338,6 +362,138 @@ makeChicken: function() {
 	localStorage.player = "chicken";
 	console.log(localStorage.player);
 	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+},
+
+makePlayer: function() {
+	delete localStorage.player;
+	localStorage.player = "yo";
+	console.log(localStorage.player);
+	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+}
+
+}
+
+var shopState = {
+	preload: function() {
+	// Load the player sprite
+    game.load.spritesheet('player', 'assets/player.png', 32, 48);
+},
+create: function() {
+	
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    game.scale.setShowAll();
+    game.scale.refresh();
+    game.scale.setScreenSize(true);
+
+	game.stage.backgroundColor = '#71c5cf';
+       
+    this.labelTitle = this.game.add.text(190, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelTitle.fontWeight = 'bold';
+	this.labelTitle.fontSize = 50;
+	this.labelTitle.stroke = '#000000';
+	this.labelTitle.strokeThickness = 6;
+	this.labelTitle.fill = '#ffffff';
+	this.labelTitle.anchor.set(0.5);
+	this.labelBigJump = this.game.add.text(150, 120, "10c Big Jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelBigJump.fontWeight = 'bold';
+	this.labelBigJump.stroke = '#000000';
+	this.labelBigJump.strokeThickness = 6;
+	this.labelBigJump.fill = '#ffffff';
+	this.labelBigJump.inputEnabled = true;
+	this.labelNothing1 = this.game.add.text(150, 170, "0c Nothing", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelNothing1.fontWeight = 'bold';
+	this.labelNothing1.stroke = '#000000';
+	this.labelNothing1.strokeThickness = 6;
+	this.labelNothing1.fill = '#ffffff';
+	this.labelNothing1.inputEnabled = true;
+	this.labelNothing2 = this.game.add.text(150, 220, "0c Nothing", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelNothing2.fontWeight = 'bold';
+	this.labelNothing2.stroke = '#000000';
+	this.labelNothing2.strokeThickness = 6;
+	this.labelNothing2.fill = '#ffffff';
+	this.labelNothing2.inputEnabled = true;
+	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu.fontWeight = 'bold';
+	this.labelMenu.stroke = '#000000';
+	this.labelMenu.strokeThickness = 6;
+	this.labelMenu.fill = '#ffffff';
+	this.labelMenu.inputEnabled = true;
+	this.labelScore = this.game.add.text(150, 440, ("Coins: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore.fontWeight = 'bold';
+	this.labelScore.stroke = '#000000';
+	this.labelScore.strokeThickness = 6;
+	this.labelScore.fill = '#ffffff';
+	this.labelScore.inputEnabled = true;
+	
+	this.labelBigJump.inputEnabled = true;
+	this.labelBigJump.events.onInputDown.add(this.makeBigJump, this);
+	this.labelMenu.inputEnabled = true;
+	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
+
+	
+	// Display the player on the screen
+    this.player = this.game.add.sprite(100, 100, 'player');
+	console.log("we will load " + localStorage.player);
+	
+    if (localStorage.player == 'yo')
+	{
+	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	console.log("we loaded the sprite yo")
+	}
+	else if (localStorage.player == 'chicken')
+	{
+	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+	console.log("we loaded the sprite chicken")
+	}
+	// Add gravity to the player to make it fall
+    game.physics.arcade.enable(this.player);
+    this.player.body.gravity.y = 400; 
+},
+
+update: function(){
+	if (this.player.y > 430) {
+		this.player.body.velocity.y = -450;
+	}
+	this.player.animations.play('right');
+	
+	if (this.labelTitle.angle < -10)
+	{
+		twist = 1;
+	}
+	
+	if (this.labelTitle.angle > 10)
+	{
+		twist = 0;
+	}
+	if (twist == 1)
+	{
+		this.labelTitle.rotateSpeed = .5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	if (twist == 0)
+	{
+		this.labelTitle.rotateSpeed = -.5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	
+		if (localStorage.jump < -176)
+	{
+		this.labelBigJump.text = "SOLD OUT";
+		this.labelBigJump.inputEnabled = false;
+	}
+},
+
+returnMenu: function() {
+	game.state.start('menu');
+},
+
+makeBigJump: function() {
+	console.log(localStorage.jump);
+	localStorage.jump = Number(-250);
+	console.log(localStorage.jump);
+	jump_height = localStorage.jump;
 },
 
 makePlayer: function() {
@@ -481,6 +637,7 @@ var mainState = {
         // Add gravity to the player to make it fall
         game.physics.arcade.enable(this.player);
         this.player.body.gravity.y = 400; 
+		//jump_height = Number(localStorage.jump);
     },
 
     // This function is called 60 times per second
@@ -516,9 +673,11 @@ var mainState = {
     // Make the player jump 
     jump: function() {
         // Add a vertical velocity to the player
+		
         if (this.player.body.touching.down || this.jump_set > 0)
         {
-            this.player.body.velocity.y = -175;
+			jump_height = Number(localStorage.jump);
+            this.player.body.velocity.y = jump_height;
             this.player.body.velocity.x = 7;
             this.jump_set -= 1;
             this.labelJumps.text = this.jump_set;
@@ -633,5 +792,6 @@ var mainState = {
 game.state.add('main', mainState);  
 game.state.add('menu', menuState);
 game.state.add('settings', settingsState);
+game.state.add('character', characterState);
 game.state.add('shop', shopState);
 game.state.start('menu'); 
