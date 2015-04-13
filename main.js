@@ -165,19 +165,19 @@ create: function() {
 	this.labelPlayer.inputEnabled = true;
 	this.labelPlayer.events.onInputDown.add(this.makePlayer, this);
 	
+	// Display the player on the screen
     this.player = this.game.add.sprite(100, 100, 'player');
-	console.log("we are about to load the sprite " + localStorage.player)
-    if (localStorage.yo = "yes")
+	console.log("we will load " + localStorage.player);
+	
+    if (localStorage.player == 'yo')
 	{
 	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
 	console.log("we loaded the sprite yo")
-	localStorage.chicken = "no";
 	}
-	else if (localStorage.chicken = "yes")
+	else if (localStorage.player == 'chicken')
 	{
 	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
 	console.log("we loaded the sprite chicken")
-	localStorage.player = "no"
 	}
 	// Add gravity to the player to make it fall
     game.physics.arcade.enable(this.player);
