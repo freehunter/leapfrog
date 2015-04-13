@@ -367,7 +367,7 @@ var mainState = {
             //scoring based on height of platform (not used)
             //this.score += parseInt(1 * (this.player.body.y / 100));
             //scoring based on how many platforms jumped
-            this.score += 1;
+            this.score += 0;
             this.jump_set = 3;
             this.labelJumps.text = this.jump_set;
             this.labelScore.text = this.score;
