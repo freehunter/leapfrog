@@ -17,18 +17,79 @@ var High = localStorage.high;
 
 
 var menuState = {
+	
+preload: function() {
+	// Load the player sprite
+    game.load.spritesheet('player', 'assets/player.png', 32, 48);
+},
+
 create: function() {
 
-        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
-        game.scale.setShowAll();
-        game.scale.refresh();
-        game.scale.setScreenSize(true);
+	// Display the player on the screen
+    this.player = this.game.add.sprite(100, 100, 'player');
+    //this.player.animations.add('left', [0, 1, 2, 3], 10, true);
+    this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+    
+    // Add gravity to the player to make it fall
+    game.physics.arcade.enable(this.player);
+    this.player.body.gravity.y = 400; 
+
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    game.scale.setShowAll();
+    game.scale.refresh();
+    game.scale.setScreenSize(true);
+
+	game.stage.backgroundColor = '#71c5cf';
+ 
+ 
+    this.labelTitle = this.game.add.text(130, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelShop = this.game.add.text(160, 120, "Shop", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelSettings = this.game.add.text(160, 170, "Settings", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelStart = this.game.add.text(160, 220, "Start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore = this.game.add.text(160, 300, ("Score:" +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	
+	
+	//game.input.onDown.addOnce(this.startGame);
+	this.labelSettings.inputEnabled = true;
+	this.labelSettings.events.onInputDown.add(this.clickpop, this);
+	
+	this.labelStart.inputEnabled = true;
+	this.labelStart.events.onInputDown.add(this.startGame, this);
+},
+
+update: function(){
+	if (this.player.y > 430) {
+		this.player.body.velocity.y = -450;
+	}
+	this.player.animations.play('right');
+},
+
+startGame: function() {
+	game.state.start('main');
+},
+
+clickpop: function(item) {
+	game.state.start('extras');
+},
+
+}
+
+var extrasState = {
+	
+create: function() {
+
+
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    game.scale.setShowAll();
+    game.scale.refresh();
+    game.scale.setScreenSize(true);
 
 	game.stage.backgroundColor = '#71c5cf';
        
-        this.labelTitle = this.game.add.text(130, 110, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-        this.labelScore = this.game.add.text(100, 300, ("High Score:" +  High) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelMenu = this.game.add.text(200, 400, "Tap to start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+    this.labelTitle = this.game.add.text(130, 110, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+    this.button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 2, 1, 0);
+	this.labelScore = this.game.add.text(110, 300, ("Extras") , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu = this.game.add.text(195, 400, "Tap to start", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.anchor.setTo(0.5, 0.5); 
 	
 	game.input.onDown.addOnce(this.startGame);
@@ -36,6 +97,10 @@ create: function() {
 
 startGame: function() {
 	game.state.start('main');
+},
+
+actionOnClick: function() {
+	game.state.start('extras');
 }
 
 }
