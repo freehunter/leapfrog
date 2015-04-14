@@ -31,7 +31,7 @@ if (localStorage.jump) {
 if (localStorage.starCall) {
 	localStorage.starCall = localStorage.starCall;
 } else {         
-	localStorage.starCall = Number(5000);
+	localStorage.starCall = Number(4000);
 }
 
 if (localStorage.jumpNum) {
@@ -300,7 +300,7 @@ if (localStorage.jump) {
 if (localStorage.starCall) {
 	localStorage.starCall = localStorage.starCall;
 } else {         
-	localStorage.starCall = Number(5000);
+	localStorage.starCall = Number(4000);
 }
 
 if (localStorage.jumpNum) {
@@ -505,24 +505,24 @@ create: function() {
 	this.labelBigJump.strokeThickness = 6;
 	this.labelBigJump.fill = '#ffffff';
 	this.labelBigJump.inputEnabled = true;
-	this.labelBiggerJump = this.game.add.text(150, 170, "30c Bigger Jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelBiggerJump.fontWeight = 'bold';
-	this.labelBiggerJump.stroke = '#000000';
-	this.labelBiggerJump.strokeThickness = 6;
-	this.labelBiggerJump.fill = '#ffffff';
-	this.labelBiggerJump.inputEnabled = true;
-	this.labelMoreCoins = this.game.add.text(150, 220, "50c More Coins", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMoreCoins = this.game.add.text(150, 170, "50c More Coins", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMoreCoins.fontWeight = 'bold';
 	this.labelMoreCoins.stroke = '#000000';
 	this.labelMoreCoins.strokeThickness = 6;
 	this.labelMoreCoins.fill = '#ffffff';
 	this.labelMoreCoins.inputEnabled = true;
-	this.labelMoreJumps = this.game.add.text(150, 270, "100c +1 Jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMoreJumps = this.game.add.text(150, 220, "100c +1 Jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMoreJumps.fontWeight = 'bold';
 	this.labelMoreJumps.stroke = '#000000';
 	this.labelMoreJumps.strokeThickness = 6;
 	this.labelMoreJumps.fill = '#ffffff';
 	this.labelMoreJumps.inputEnabled = true;
+	this.labelNothing = this.game.add.text(150, 270, "0c Nothing", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelNothing.fontWeight = 'bold';
+	this.labelNothing.stroke = '#000000';
+	this.labelNothing.strokeThickness = 6;
+	this.labelNothing.fill = '#ffffff';
+	this.labelNothing.inputEnabled = true;
 	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.fontWeight = 'bold';
 	this.labelMenu.stroke = '#000000';
@@ -544,8 +544,6 @@ create: function() {
 	
 	this.labelBigJump.inputEnabled = true;
 	this.labelBigJump.events.onInputDown.add(this.makeBigJump, this);
-	this.labelBiggerJump.inputEnabled = true;
-	this.labelBiggerJump.events.onInputDown.add(this.makeBiggerJump, this);
 	this.labelMoreCoins.inputEnabled = true;
 	this.labelMoreCoins.events.onInputDown.add(this.makeMoreCoins, this);
 	this.labelMoreJumps.inputEnabled = true;
@@ -571,13 +569,13 @@ create: function() {
 },
 
 update: function(){
-	console.log(localStorage.starSpeed);
 	this.labelScore.text = ("Coins: " +  localStorage.high)
 	if (this.player.y > 430) {
 		this.player.body.velocity.y = -450;
 	}
 	this.player.animations.play('right');
 	
+	//Title logo animation
 	if (this.labelTitle.angle < -10)
 	{
 		twist = 1;
@@ -600,21 +598,34 @@ update: function(){
 		this.labelTitle.angle += this.labelTitle.rotateSpeed;
 	}
 	
-		if (localStorage.jump < -176)
+	//Big Jump store item
+	if (localStorage.jump < -176)
 	{
-		this.labelBigJump.text = "SOLD OUT";
-		this.labelBigJump.inputEnabled = false;
+		this.labelBigJump.text = "30c Bigger Jump";
 	}
 	if (localStorage.jump < -201)
 	{
-		this.labelBiggerJump.text = "SOLD OUT";
-		this.labelBiggerJump.inputEnabled = false;
+		this.labelBigJump.text = "SOLD OUT!";
+		this.labelBigJump.inputEnabled = false;
 	}
-		if (localStorage.starCall < 4999)
+
+	//More Coins store item
+	if (localStorage.starCall == 4000)
 	{
-		this.labelMoreCoins.text = "SOLD OUT";
+		this.labelMoreCoins.text = "50c More Coins";
+	} else if (localStorage.starCall == 3000)
+	{
+		this.labelMoreCoins.text = "60c More Coins";
+	} else if (localStorage.starCall == 2000)
+	{
+		this.labelMoreCoins.text = "70c More Coins";
+	} else if (localStorage.starCall == 1500)
+	{
+		this.labelMoreCoins.text = "SOLD OUT!";
 		this.labelMoreCoins.inputEnabled = false;
 	}
+	
+	//+1 Jump store item
 	if (localStorage.jumpNum == 4)
 	{
 		this.labelMoreJumps.text = "150c +1 Jump";
@@ -629,6 +640,7 @@ update: function(){
 		this.labelMoreJumps.text = "SOLD OUT!";
 		this.labelMoreJumps.inputEnabled = false;
 	}
+
 },
 
 returnMenu: function() {
@@ -637,44 +649,65 @@ returnMenu: function() {
 
 makeBigJump: function() {
 	this.labelMessage.visible = false;
-	if (localStorage.high >= 10)
+	if (localStorage.jump > -200)
 	{
-		console.log(localStorage.jump);
-		localStorage.jump = Number(-200);
-		console.log(localStorage.jump);
-		jump_height = localStorage.jump;
-		localStorage.high = Number(localStorage.high) - 10;
-	} else {
-		this.labelMessage.visible = true;
+		if (localStorage.high >= 10)
+		{
+			console.log(localStorage.jump);
+			localStorage.jump = Number(-200);
+			console.log(localStorage.jump);
+			jump_height = localStorage.jump;
+			localStorage.high = Number(localStorage.high) - 10;
+		} else {
+			this.labelMessage.visible = true;
+		}
+	} else if (localStorage.jump <= -200)
+	{
+		if (localStorage.high >= 30)
+		{
+			console.log(localStorage.jump);
+			localStorage.jump = Number(-225);
+			console.log(localStorage.jump);
+			jump_height = localStorage.jump;
+			localStorage.high = Number(localStorage.high) - 30;
+		} else {
+			this.labelMessage.visible = true;
 	}
-},
-
-makeBiggerJump: function() {
-	this.labelMessage.visible = false;
-	if (localStorage.high >= 30)
-	{
-		console.log(localStorage.jump);
-		localStorage.jump = Number(-225);
-		console.log(localStorage.jump);
-		jump_height = localStorage.jump;
-		localStorage.high = Number(localStorage.high) - 30;
-	} else {
-		this.labelMessage.visible = true;
 	}
 },
 
 makeMoreCoins: function() {
 	this.labelMessage.visible = false;
-	if (localStorage.high >= 50)
+	console.log("the old star call is " + localStorage.starCall);
+	if (localStorage.starCall == 4000)
 	{
-		//delete localStorage.starSpeed;
-		console.log(localStorage.starCall);
-		localStorage.starCall = Number(4000);
-		console.log(localStorage.starCall);
-		localStorage.high = Number(localStorage.high) - 50;
-	} else {
-		this.labelMessage.visible = true;
+		if (localStorage.high >= 50)
+		{
+			localStorage.starCall = (Number(localStorage.starCall) - 1000);
+			localStorage.high = Number(localStorage.high) - 50;
+		} else {
+			this.labelMessage.visible = true;
+		}
+	} else if (localStorage.starCall == 3000)
+	{	
+		if (localStorage.high >= 60)
+		{
+			localStorage.starCall = (Number(localStorage.starCall) - 1000);
+			localStorage.high = Number(localStorage.high) - 60;
+		} else {
+			this.labelMessage.visible = true;
+		}
+	} else if (localStorage.starCall == 2000)
+	{	
+		if (localStorage.high >= 70)
+		{
+			localStorage.starCall = (Number(localStorage.starCall) - 500);
+			localStorage.high = Number(localStorage.high) - 70;
+		} else {
+			this.labelMessage.visible = true;
+		}
 	}
+	console.log("the new star call is " + localStorage.starCall);
 },
 makeMoreJumps: function() {
 	this.labelMessage.visible = false;
@@ -682,10 +715,7 @@ makeMoreJumps: function() {
 	{
 		if (localStorage.high >= 100)
 		{
-			//delete localStorage.starSpeed;
-			console.log(localStorage.jumpNum);
 			localStorage.jumpNum = Number(4);
-			console.log(localStorage.starCall);
 			localStorage.high = Number(localStorage.high) - 100;
 			this.jump_set = Number(localStorage.jumpNum);
 		} else {
@@ -695,10 +725,7 @@ makeMoreJumps: function() {
 	{
 		if (localStorage.high >= 150)
 		{
-			//delete localStorage.starSpeed;
-			console.log(localStorage.jumpNum);
 			localStorage.jumpNum = Number(5);
-			console.log(localStorage.starCall);
 			localStorage.high = Number(localStorage.high) - 150;
 			this.jump_set = Number(localStorage.jumpNum);
 		} else {
@@ -708,10 +735,7 @@ makeMoreJumps: function() {
 	{
 		if (localStorage.high >= 300)
 		{
-			//delete localStorage.starSpeed;
-			console.log(localStorage.jumpNum);
 			localStorage.jumpNum = Number(9);
-			console.log(localStorage.starCall);
 			localStorage.high = Number(localStorage.high) - 300;
 			this.jump_set = Number(localStorage.jumpNum);
 		} else {
@@ -777,7 +801,7 @@ var mainState = {
 	// Create coins
         this.coin = game.add.group();
         this.coin.enableBody = true;
-        this.coin.createMultiple(2, 'coin');		
+        this.coin.createMultiple(4, 'coin');		
         
         //create the starting platform
 		this.starting1 = this.platforms.create(10, 300, 'platform')
