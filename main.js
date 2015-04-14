@@ -28,6 +28,11 @@ if (localStorage.jump) {
 	localStorage.jump = Number(-175);
 }
 
+if (localStorage.starCall) {
+	localStorage.starCall = localStorage.starCall;
+} else {         
+	localStorage.starCall = Number(5000);
+}
 var High = localStorage.high;
 
 //var High = 0;
@@ -463,18 +468,18 @@ create: function() {
 	this.labelBigJump.strokeThickness = 6;
 	this.labelBigJump.fill = '#ffffff';
 	this.labelBigJump.inputEnabled = true;
-	this.labelBiggerJump = this.game.add.text(150, 170, "50c Bigger Jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelBiggerJump = this.game.add.text(150, 170, "30c Bigger Jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelBiggerJump.fontWeight = 'bold';
 	this.labelBiggerJump.stroke = '#000000';
 	this.labelBiggerJump.strokeThickness = 6;
 	this.labelBiggerJump.fill = '#ffffff';
 	this.labelBiggerJump.inputEnabled = true;
-	this.labelNothing2 = this.game.add.text(150, 220, "0c Nothing", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelNothing2.fontWeight = 'bold';
-	this.labelNothing2.stroke = '#000000';
-	this.labelNothing2.strokeThickness = 6;
-	this.labelNothing2.fill = '#ffffff';
-	this.labelNothing2.inputEnabled = true;
+	this.labelMoreCoins = this.game.add.text(150, 220, "50c More Coins", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMoreCoins.fontWeight = 'bold';
+	this.labelMoreCoins.stroke = '#000000';
+	this.labelMoreCoins.strokeThickness = 6;
+	this.labelMoreCoins.fill = '#ffffff';
+	this.labelMoreCoins.inputEnabled = true;
 	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.fontWeight = 'bold';
 	this.labelMenu.stroke = '#000000';
@@ -498,23 +503,22 @@ create: function() {
 	this.labelBigJump.events.onInputDown.add(this.makeBigJump, this);
 	this.labelBiggerJump.inputEnabled = true;
 	this.labelBiggerJump.events.onInputDown.add(this.makeBiggerJump, this);
+	this.labelMoreCoins.inputEnabled = true;
+	this.labelMoreCoins.events.onInputDown.add(this.makeMoreCoins, this);
 	this.labelMenu.inputEnabled = true;
 	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
 
 	
 	// Display the player on the screen
     this.player = this.game.add.sprite(100, 100, 'player');
-	console.log("we will load " + localStorage.player);
 	
     if (localStorage.player == 'yo')
 	{
 	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
-	console.log("we loaded the sprite yo")
 	}
 	else if (localStorage.player == 'chicken')
 	{
 	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
-	console.log("we loaded the sprite chicken")
 	}
 	// Add gravity to the player to make it fall
     game.physics.arcade.enable(this.player);
@@ -522,6 +526,7 @@ create: function() {
 },
 
 update: function(){
+	console.log(localStorage.starSpeed);
 	this.labelScore.text = ("Coins: " +  localStorage.high)
 	if (this.player.y > 430) {
 		this.player.body.velocity.y = -450;
@@ -560,6 +565,11 @@ update: function(){
 		this.labelBiggerJump.text = "SOLD OUT";
 		this.labelBiggerJump.inputEnabled = false;
 	}
+		if (localStorage.starCall < 4999)
+	{
+		this.labelMoreCoins.text = "SOLD OUT";
+		this.labelMoreCoins.inputEnabled = false;
+	}
 },
 
 returnMenu: function() {
@@ -582,12 +592,26 @@ makeBigJump: function() {
 
 makeBiggerJump: function() {
 	this.labelMessage.visible = false;
-	if (localStorage.high >= 50)
+	if (localStorage.high >= 30)
 	{
 		console.log(localStorage.jump);
 		localStorage.jump = Number(-225);
 		console.log(localStorage.jump);
 		jump_height = localStorage.jump;
+		localStorage.high = Number(localStorage.high) - 30;
+	} else {
+		this.labelMessage.visible = true;
+	}
+},
+
+makeMoreCoins: function() {
+	this.labelMessage.visible = false;
+	if (localStorage.high >= 50)
+	{
+		//delete localStorage.starSpeed;
+		console.log(localStorage.starCall);
+		localStorage.starCall = Number(4000);
+		console.log(localStorage.starCall);
 		localStorage.high = Number(localStorage.high) - 50;
 	} else {
 		this.labelMessage.visible = true;
@@ -624,6 +648,8 @@ var mainState = {
 
     // Function called after 'preload' to setup the game 
     create: function() { 
+		starSpeed = Number(localStorage.starCall);
+		console.log(starSpeed);
         var High = localStorage.high;
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
         game.scale.setShowAll();
@@ -670,8 +696,9 @@ var mainState = {
         this.timer = this.game.time.events.loop(1300, this.addRowOfclouds, this); 
 
 	// Timer that calls 'addRowOfcoin' every x milliseconds
-	starCall = 5000;
-        this.timer = this.game.time.events.loop(starCall, this.addacoin, this);
+		//starCall = Number(localStorage.starCall);
+        this.timer = this.game.time.events.loop(starSpeed, this.addacoin, this);
+		console.log(starSpeed);
 		
 	// Timer that calls 'visiblecoin' every x milliseconds
         //this.timer = this.game.time.events.loop(2000, this.visiblecoin, this); 
@@ -875,8 +902,9 @@ var mainState = {
 		this.coin.body.velocity.x = (-220 - (this.distance / 10)); 
 		this.coin.body.immovable = true;
 		//make the stars come faster as the level goes on
-		starCall = starCall - (this.distance / 10);
-		console.log(starCall);
+		starSpeed = (starSpeed - this.distance / 10 - (localStorage.high / 10));
+		console.log(starSpeed);
+		console.log(localStorage.starCall);
                
         // Kill the coin when it's no longer visible 
         this.coin.checkWorldBounds = true;
