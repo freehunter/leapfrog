@@ -273,11 +273,41 @@ clearScore: function() {
 
 clearScoreReally: function() {
 	localStorage.clear()
-	if (localStorage.high) {
-		localStorage.high = Number(localStorage.high) + 0;
-	} else {
-		localStorage.high = 0;
-	}
+if (localStorage.high) {
+	localStorage.high = Number(localStorage.high) + 0;
+} else {
+	localStorage.high = 0;
+}
+
+if (localStorage.player) {
+	localStorage.player = localStorage.player;
+} else {
+	localStorage.player = "yo";
+}
+
+if (localStorage.buyspider) {
+	localStorage.buyspider = localStorage.buyspider;
+} else {
+	localStorage.buyspider = "no";
+}
+
+if (localStorage.jump) {
+	localStorage.jump = localStorage.jump;
+} else {         
+	localStorage.jump = Number(-175);
+}
+
+if (localStorage.starCall) {
+	localStorage.starCall = localStorage.starCall;
+} else {         
+	localStorage.starCall = Number(5000);
+}
+
+if (localStorage.jumpNum) {
+	localStorage.jumpNum = localStorage.jumpNum;
+} else {         
+	localStorage.jumpNum = Number(3);
+}
 	this.labelScore.text = "Score: " + localStorage.high;
 	this.returnMenu();
 },
