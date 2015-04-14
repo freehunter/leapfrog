@@ -33,6 +33,13 @@ if (localStorage.starCall) {
 } else {         
 	localStorage.starCall = Number(5000);
 }
+
+if (localStorage.jumpNum) {
+	localStorage.jumpNum = localStorage.jumpNum;
+} else {         
+	localStorage.jumpNum = Number(3);
+}
+
 var High = localStorage.high;
 
 //var High = 0;
@@ -480,6 +487,12 @@ create: function() {
 	this.labelMoreCoins.strokeThickness = 6;
 	this.labelMoreCoins.fill = '#ffffff';
 	this.labelMoreCoins.inputEnabled = true;
+	this.labelMoreJumps = this.game.add.text(150, 270, "100c +1 Jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMoreJumps.fontWeight = 'bold';
+	this.labelMoreJumps.stroke = '#000000';
+	this.labelMoreJumps.strokeThickness = 6;
+	this.labelMoreJumps.fill = '#ffffff';
+	this.labelMoreJumps.inputEnabled = true;
 	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.fontWeight = 'bold';
 	this.labelMenu.stroke = '#000000';
@@ -505,6 +518,8 @@ create: function() {
 	this.labelBiggerJump.events.onInputDown.add(this.makeBiggerJump, this);
 	this.labelMoreCoins.inputEnabled = true;
 	this.labelMoreCoins.events.onInputDown.add(this.makeMoreCoins, this);
+	this.labelMoreJumps.inputEnabled = true;
+	this.labelMoreJumps.events.onInputDown.add(this.makeMoreJumps, this);
 	this.labelMenu.inputEnabled = true;
 	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
 
@@ -570,6 +585,20 @@ update: function(){
 		this.labelMoreCoins.text = "SOLD OUT";
 		this.labelMoreCoins.inputEnabled = false;
 	}
+	if (localStorage.jumpNum == 4)
+	{
+		this.labelMoreJumps.text = "150c +1 Jump";
+	}
+	if (localStorage.jumpNum == 5)
+	{
+		this.labelMoreJumps.fontSize = 27;
+		this.labelMoreJumps.text = "300c Flappy Mode!";
+	}
+	if (localStorage.jumpNum > 5)
+	{
+		this.labelMoreJumps.text = "SOLD OUT!";
+		this.labelMoreJumps.inputEnabled = false;
+	}
 },
 
 returnMenu: function() {
@@ -617,6 +646,49 @@ makeMoreCoins: function() {
 		this.labelMessage.visible = true;
 	}
 },
+makeMoreJumps: function() {
+	this.labelMessage.visible = false;
+	if (localStorage.jumpNum == 3)
+	{
+		if (localStorage.high >= 100)
+		{
+			//delete localStorage.starSpeed;
+			console.log(localStorage.jumpNum);
+			localStorage.jumpNum = Number(4);
+			console.log(localStorage.starCall);
+			localStorage.high = Number(localStorage.high) - 100;
+			this.jump_set = Number(localStorage.jumpNum);
+		} else {
+			this.labelMessage.visible = true;
+		}
+	} else if (localStorage.jumpNum == 4)
+	{
+		if (localStorage.high >= 150)
+		{
+			//delete localStorage.starSpeed;
+			console.log(localStorage.jumpNum);
+			localStorage.jumpNum = Number(5);
+			console.log(localStorage.starCall);
+			localStorage.high = Number(localStorage.high) - 150;
+			this.jump_set = Number(localStorage.jumpNum);
+		} else {
+			this.labelMessage.visible = true;
+		}
+	} else if (localStorage.jumpNum == 5)
+	{
+		if (localStorage.high >= 300)
+		{
+			//delete localStorage.starSpeed;
+			console.log(localStorage.jumpNum);
+			localStorage.jumpNum = Number(9);
+			console.log(localStorage.starCall);
+			localStorage.high = Number(localStorage.high) - 300;
+			this.jump_set = Number(localStorage.jumpNum);
+		} else {
+			this.labelMessage.visible = true;
+		}
+	}
+},
 
 }
 
@@ -627,7 +699,7 @@ var mainState = {
     preload: function() { 
         
         //set double jump
-        this.jump_set = 3;
+        this.jump_set = Number(localStorage.jumpNum);
         // Change the background color of the game
         game.stage.backgroundColor = '#71c5cf';
 
@@ -733,7 +805,7 @@ var mainState = {
 		this.labelHigh.fill = '#ffffff';
         
         //show number of jumps left in top right of the screen
-        this.labelJumps = this.game.add.text(340, 40, "0", { font: "30px Arial", fill: "#ffffff" }); 
+        this.labelJumps = this.game.add.text(340, 40, localStorage.jumpNum, { font: "30px Arial", fill: "#ffffff" }); 
         this.labelJumpstxt = this.game.add.text(300, 10, "Jumps", { font: "30px Arial", fill: "#ffffff" });  
 		this.labelJumps.fontWeight = 'bold';
 		this.labelJumps.stroke = '#000000';
@@ -815,7 +887,7 @@ var mainState = {
             //this.score += parseInt(1 * (this.player.body.y / 100));
             //scoring based on how many platforms jumped
             //this.score += 0;
-            this.jump_set = 3;
+            this.jump_set = Number(localStorage.jumpNum);
             this.labelJumps.text = this.jump_set;
             this.labelScore.text = this.score;
             //if the score is double digits, move the counter over
@@ -842,7 +914,7 @@ var mainState = {
     
     platfall: function() {
 		localStorage.high = Number(localStorage.high) + 1;
-		this.jump_set = 3;
+		this.jump_set = Number(localStorage.jumpNum);
 		this.labelJumps.text = this.jump_set;
         this.labelScore.text = localStorage.high;
 
