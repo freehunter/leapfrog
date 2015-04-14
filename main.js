@@ -980,7 +980,7 @@ var mainState = {
     
     platfall: function() {
 		localStorage.high = Number(localStorage.high) + 1;
-		this.jump_set = this.jump_set + 1);
+		this.jump_set = this.jump_set + 1;
 		this.labelJumps.text = this.jump_set;
         this.labelScore.text = localStorage.high;
 
