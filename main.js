@@ -678,7 +678,6 @@ makeBigJump: function() {
 
 makeMoreCoins: function() {
 	this.labelMessage.visible = false;
-	console.log("the old star call is " + localStorage.starCall);
 	if (localStorage.starCall == 4000)
 	{
 		if (localStorage.high >= 50)
@@ -707,7 +706,6 @@ makeMoreCoins: function() {
 			this.labelMessage.visible = true;
 		}
 	}
-	console.log("the new star call is " + localStorage.starCall);
 },
 makeMoreJumps: function() {
 	this.labelMessage.visible = false;
@@ -801,7 +799,15 @@ var mainState = {
 	// Create coins
         this.coin = game.add.group();
         this.coin.enableBody = true;
-        this.coin.createMultiple(4, 'coin');		
+        this.coin.createMultiple(20, 'coin');		
+		
+	// Create flappy platforms
+	if (localStorage.jumpNum = 20)
+	{
+		this.flappy = game.add.group();
+		this.flappy.enableBody = true;
+		this.flappy.createMultiple(10, 'platform');
+	}
         
         //create the starting platform
 		this.starting1 = this.platforms.create(10, 300, 'platform')
@@ -822,9 +828,11 @@ var mainState = {
         this.timer = this.game.time.events.loop(1300, this.addRowOfclouds, this); 
 
 	// Timer that calls 'addRowOfcoin' every x milliseconds
-		//starCall = Number(localStorage.starCall);
         this.timer = this.game.time.events.loop(starSpeed, this.addacoin, this);
 		console.log(starSpeed);
+	
+	// Timer that calls 'addRowOfFlappy' every x milliseconds
+        this.timer = this.game.time.events.loop(1300, this.addRowOfFlappy, this); 
 		
 	// Timer that calls 'visiblecoin' every x milliseconds
         //this.timer = this.game.time.events.loop(2000, this.visiblecoin, this); 
@@ -907,6 +915,7 @@ var mainState = {
 		
      
     game.physics.arcade.collide(this.player, this.platforms);
+	game.physics.arcade.collide(this.player, this.flappy);
     game.physics.arcade.collide(this.player, this.starting);
 	game.physics.arcade.overlap(this.player, this.coin, this.platfall, null, this);
             
@@ -1025,10 +1034,10 @@ var mainState = {
 	    this.coin = this.game.add.sprite(400, 100, 'coin');
 		game.physics.arcade.enable(this.coin);
 		// Add velocity to the coin to make it move left
-		this.coin.body.velocity.x = (-220 - (this.distance / 10)); 
+		this.coin.body.velocity.x = (-220); 
 		this.coin.body.immovable = true;
-		//make the stars come faster as the level goes on
-		starSpeed = (starSpeed - this.distance / 10 - (localStorage.high / 10));
+		//make the stars come faster as the level goes on - disabled
+		//starSpeed = (starSpeed - this.distance / 10 - (localStorage.high / 10));
 		console.log(starSpeed);
 		console.log(localStorage.starCall);
                
@@ -1036,6 +1045,34 @@ var mainState = {
         this.coin.checkWorldBounds = true;
         this.coin.outOfBoundsKill = true;
     },
+	
+    // Add a flappy platform on the screen
+    addOneflappy: function(x, y) {
+        // Get the first dead platform of our group
+        var flappy = this.flappy.getFirstDead();
+		this.distance = this.distance + 1;
+		this.labelHigh.text = this.distance;
+
+        // Set the new position of the platform
+        flappy.reset(x, y);
+		//flappy.angle = 180;
+
+        // Add velocity to the platform to make it move left
+        flappy.body.velocity.x = (-260); 
+		flappy.body.immovable = true;
+               
+        // Kill the platform when it's no longer visible 
+        flappy.checkWorldBounds = true;
+        flappy.outOfBoundsKill = true;
+    },
+
+    // Add a platform at a random height
+    addRowOfFlappy: function() {
+        //this.addOneflappy(400, (Math.random()*(350-250) + 250));
+		this.addOneflappy(400, (Math.random() * (-400 - -250) + -250));
+		//this.addOneflappy(400, -300);
+    },	
+	
 };
 
 // Add and start the 'main' state to start the game
