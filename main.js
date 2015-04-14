@@ -496,6 +496,8 @@ create: function() {
 	
 	this.labelBigJump.inputEnabled = true;
 	this.labelBigJump.events.onInputDown.add(this.makeBigJump, this);
+	this.labelBiggerJump.inputEnabled = true;
+	this.labelBiggerJump.events.onInputDown.add(this.makeBiggerJump, this);
 	this.labelMenu.inputEnabled = true;
 	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
 
@@ -668,7 +670,8 @@ var mainState = {
         this.timer = this.game.time.events.loop(1300, this.addRowOfclouds, this); 
 
 	// Timer that calls 'addRowOfcoin' every x milliseconds
-        this.timer = this.game.time.events.loop(5000, this.addacoin, this);
+	starCall = 5000;
+        this.timer = this.game.time.events.loop(starCall, this.addacoin, this);
 		
 	// Timer that calls 'visiblecoin' every x milliseconds
         //this.timer = this.game.time.events.loop(2000, this.visiblecoin, this); 
@@ -869,8 +872,11 @@ var mainState = {
 	    this.coin = this.game.add.sprite(400, 100, 'coin');
 		game.physics.arcade.enable(this.coin);
 		// Add velocity to the coin to make it move left
-		this.coin.body.velocity.x = (-220); 
+		this.coin.body.velocity.x = (-220 - (this.distance / 10)); 
 		this.coin.body.immovable = true;
+		//make the stars come faster as the level goes on
+		starCall = starCall - (this.distance / 10);
+		console.log(starCall);
                
         // Kill the coin when it's no longer visible 
         this.coin.checkWorldBounds = true;
