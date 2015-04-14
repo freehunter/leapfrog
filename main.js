@@ -832,7 +832,10 @@ var mainState = {
 		console.log(starSpeed);
 	
 	// Timer that calls 'addRowOfFlappy' every x milliseconds
+	if (localStorage.jumpNum == 20)
+		{	
         this.timer = this.game.time.events.loop(1300, this.addRowOfFlappy, this); 
+		}
 		
 	// Timer that calls 'visiblecoin' every x milliseconds
         //this.timer = this.game.time.events.loop(2000, this.visiblecoin, this); 
