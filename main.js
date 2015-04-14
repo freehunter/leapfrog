@@ -122,6 +122,9 @@ create: function() {
 	this.labelCharacters.inputEnabled = true;
 	this.labelCharacters.events.onInputDown.add(this.characterMenu, this);
 	
+	this.labelScore.inputEnabled = true;
+	this.labelScore.events.onInputDown.add(this.cheatMoney, this);
+	
 },
 
 update: function(){
@@ -170,6 +173,10 @@ shopMenu: function(item) {
 	game.state.start('shop');
 },
 
+cheatMoney: function(item) {
+	localStorage.high = Number(localStorage.high) + 5;
+},
+
 }
 
 var settingsState = {
@@ -191,11 +198,29 @@ create: function() {
 	this.labelTitle.strokeThickness = 6;
 	this.labelTitle.fill = '#ffffff';
 	this.labelTitle.anchor.set(0.5);
-	this.labelClear = this.game.add.text(150, 170, "Clear Scores", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelClear = this.game.add.text(150, 170, "Clear All", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelClear.fontWeight = 'bold';
 	this.labelClear.stroke = '#000000';
 	this.labelClear.strokeThickness = 6;
 	this.labelClear.fill = '#ffffff';
+	this.labelSure = this.game.add.text(200, 170, "Are you sure?", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelSure.fontWeight = 'bold';
+	this.labelSure.stroke = '#000000';
+	this.labelSure.strokeThickness = 6;
+	this.labelSure.fill = '#ffffff';
+	this.labelSure.anchor.set(0.5);
+	this.labelYes = this.game.add.text(200, 220, "YES EVERYTHING", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelYes.fontWeight = 'bold';
+	this.labelYes.stroke = '#000000';
+	this.labelYes.strokeThickness = 6;
+	this.labelYes.fill = '#ffffff';
+	this.labelYes.anchor.set(0.5);
+	this.labelGodNo = this.game.add.text(200, 270, "oh.. oh god no...", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelGodNo.fontWeight = 'bold';
+	this.labelGodNo.stroke = '#000000';
+	this.labelGodNo.strokeThickness = 6;
+	this.labelGodNo.fill = '#ffffff';
+	this.labelGodNo.anchor.set(0.5);
 	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.fontWeight = 'bold';
 	this.labelMenu.stroke = '#000000';
@@ -206,10 +231,19 @@ create: function() {
 	this.labelScore.stroke = '#000000';
 	this.labelScore.strokeThickness = 6;
 	this.labelScore.fill = '#ffffff';
-	this.labelScore.inputEnabled = true;
-	this.labelScore.events.onInputDown.add(this.clearScore, this);
+	
+	this.labelSure.visible = false;
+	this.labelYes.visible = false;
+	this.labelGodNo.visible = false;
+	
+	this.labelClear.inputEnabled = true;
+	this.labelClear.events.onInputDown.add(this.clearScore, this);
 	this.labelMenu.inputEnabled = true;
 	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
+	this.labelYes.inputEnabled = true;
+	this.labelYes.events.onInputDown.add(this.clearScoreReally, this);
+	this.labelGodNo.inputEnabled = true;
+	this.labelGodNo.events.onInputDown.add(this.returnMenu, this);
 },
 
 returnMenu: function() {
@@ -217,13 +251,23 @@ returnMenu: function() {
 },
 
 clearScore: function() {
-	localStorage.high = 0;
+	this.labelClear.visible = false;
+	this.labelSure.visible = true;
+	this.labelYes.visible = true;
+	this.labelYes.inputEnabled = true;
+	this.labelGodNo.visible = true;
+	this.labelGodNo.inputEnabled = true;
+},
+
+clearScoreReally: function() {
+	localStorage.clear()
 	if (localStorage.high) {
 		localStorage.high = Number(localStorage.high) + 0;
 	} else {
 		localStorage.high = 0;
 	}
 	this.labelScore.text = "Score: " + localStorage.high;
+	this.returnMenu();
 },
 
 update: function() {
@@ -285,6 +329,12 @@ create: function() {
 	this.labelChicken.strokeThickness = 6;
 	this.labelChicken.fill = '#ffffff';
 	this.labelChicken.inputEnabled = true;
+	this.labelMessage = this.game.add.text(100, 300, ("Not enough coins!") , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMessage.fontWeight = 'bold';
+	this.labelMessage.stroke = '#000000';
+	this.labelMessage.strokeThickness = 6;
+	this.labelMessage.fill = '#ffffff';
+	this.labelMessage.visible = false;
 	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.fontWeight = 'bold';
 	this.labelMenu.stroke = '#000000';
@@ -325,6 +375,7 @@ create: function() {
 },
 
 update: function(){
+	this.labelScore.text = ("Coins: " +  localStorage.high)
 	if (this.player.y > 430) {
 		this.player.body.velocity.y = -450;
 	}
@@ -358,13 +409,25 @@ returnMenu: function() {
 },
 
 makeChicken: function() {
-	delete localStorage.player;
-	localStorage.player = "chicken";
-	console.log(localStorage.player);
-	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+	this.labelMessage.visible = false;
+	if (localStorage.high >= 5 || localStorage.buyspider == "yes")
+	{
+		delete localStorage.player;
+		localStorage.player = "chicken";
+		console.log(localStorage.player);
+		this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+		if (localStorage.buyspider == "no"){
+			localStorage.high = Number(localStorage.high) - 5;
+			localStorage.buyspider = "yes";
+		}
+	} else {
+		this.labelMessage.visible = true;
+	}
+	
 },
 
 makePlayer: function() {
+	this.labelMessage.visible = false;
 	delete localStorage.player;
 	localStorage.player = "yo";
 	console.log(localStorage.player);
@@ -400,12 +463,12 @@ create: function() {
 	this.labelBigJump.strokeThickness = 6;
 	this.labelBigJump.fill = '#ffffff';
 	this.labelBigJump.inputEnabled = true;
-	this.labelNothing1 = this.game.add.text(150, 170, "0c Nothing", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelNothing1.fontWeight = 'bold';
-	this.labelNothing1.stroke = '#000000';
-	this.labelNothing1.strokeThickness = 6;
-	this.labelNothing1.fill = '#ffffff';
-	this.labelNothing1.inputEnabled = true;
+	this.labelBiggerJump = this.game.add.text(150, 170, "50c Bigger Jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelBiggerJump.fontWeight = 'bold';
+	this.labelBiggerJump.stroke = '#000000';
+	this.labelBiggerJump.strokeThickness = 6;
+	this.labelBiggerJump.fill = '#ffffff';
+	this.labelBiggerJump.inputEnabled = true;
 	this.labelNothing2 = this.game.add.text(150, 220, "0c Nothing", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelNothing2.fontWeight = 'bold';
 	this.labelNothing2.stroke = '#000000';
@@ -418,6 +481,12 @@ create: function() {
 	this.labelMenu.strokeThickness = 6;
 	this.labelMenu.fill = '#ffffff';
 	this.labelMenu.inputEnabled = true;
+	this.labelMessage = this.game.add.text(100, 300, ("Not enough coins!") , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMessage.fontWeight = 'bold';
+	this.labelMessage.stroke = '#000000';
+	this.labelMessage.strokeThickness = 6;
+	this.labelMessage.fill = '#ffffff';
+	this.labelMessage.visible = false;
 	this.labelScore = this.game.add.text(150, 440, ("Coins: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelScore.fontWeight = 'bold';
 	this.labelScore.stroke = '#000000';
@@ -451,6 +520,7 @@ create: function() {
 },
 
 update: function(){
+	this.labelScore.text = ("Coins: " +  localStorage.high)
 	if (this.player.y > 430) {
 		this.player.body.velocity.y = -450;
 	}
@@ -483,6 +553,11 @@ update: function(){
 		this.labelBigJump.text = "SOLD OUT";
 		this.labelBigJump.inputEnabled = false;
 	}
+	if (localStorage.jump < -201)
+	{
+		this.labelBiggerJump.text = "SOLD OUT";
+		this.labelBiggerJump.inputEnabled = false;
+	}
 },
 
 returnMenu: function() {
@@ -490,18 +565,32 @@ returnMenu: function() {
 },
 
 makeBigJump: function() {
-	console.log(localStorage.jump);
-	localStorage.jump = Number(-250);
-	console.log(localStorage.jump);
-	jump_height = localStorage.jump;
+	this.labelMessage.visible = false;
+	if (localStorage.high >= 10)
+	{
+		console.log(localStorage.jump);
+		localStorage.jump = Number(-200);
+		console.log(localStorage.jump);
+		jump_height = localStorage.jump;
+		localStorage.high = Number(localStorage.high) - 10;
+	} else {
+		this.labelMessage.visible = true;
+	}
 },
 
-makePlayer: function() {
-	delete localStorage.player;
-	localStorage.player = "yo";
-	console.log(localStorage.player);
-	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
-}
+makeBiggerJump: function() {
+	this.labelMessage.visible = false;
+	if (localStorage.high >= 50)
+	{
+		console.log(localStorage.jump);
+		localStorage.jump = Number(-225);
+		console.log(localStorage.jump);
+		jump_height = localStorage.jump;
+		localStorage.high = Number(localStorage.high) - 50;
+	} else {
+		this.labelMessage.visible = true;
+	}
+},
 
 }
 
@@ -561,8 +650,16 @@ var mainState = {
         this.coin.createMultiple(2, 'coin');		
         
         //create the starting platform
-        //this.starting = this.platforms.create(50, 400, 'platform')
-        //this.starting.body.immovable = true;
+		this.starting1 = this.platforms.create(10, 300, 'platform')
+        this.starting2 = this.platforms.create(80, 300, 'platform')
+		this.starting3 = this.platforms.create(230, 300, 'platform')
+		this.starting4 = this.platforms.create(380, 300, 'platform')
+        this.starting1.body.immovable = true;
+		this.starting2.body.immovable = true;
+		this.starting3.body.immovable = true;
+		this.starting4.body.immovable = true;
+		
+		this.distance = 0;
 
         // Timer that calls 'addRowOfplatforms' every x milliseconds
         this.timer = this.game.time.events.loop(550, this.addRowOfplatforms, this);  
@@ -577,9 +674,9 @@ var mainState = {
         //this.timer = this.game.time.events.loop(2000, this.visiblecoin, this); 
         
         // Add a score label on the top left of the screen
-        this.score = 0;
-        this.labelScoretxt = this.game.add.text(20, 10, "Score", { font: "30px Arial", fill: "#ffffff" });  
-        this.labelScore = this.game.add.text(50, 40, "0", { font: "30px Arial", fill: "#ffffff" });  
+        //this.score = localStorage.high;
+        this.labelScoretxt = this.game.add.text(20, 10, "Coins", { font: "30px Arial", fill: "#ffffff" });  
+        this.labelScore = this.game.add.text(50, 40, localStorage.high, { font: "30px Arial", fill: "#ffffff" });  
         this.labelScore.anchor.setTo(0.1, 0.1);
 		this.labelScore.fontWeight = 'bold';
 		this.labelScore.stroke = '#000000';
@@ -593,7 +690,7 @@ var mainState = {
 
 
         // high scores
-        this.labelHightxt = this.game.add.text(175, 10, "Top", { font: "30px Arial", fill: "#ffffff" });  
+        this.labelHightxt = this.game.add.text(150, 10, "Distance", { font: "30px Arial", fill: "#ffffff" });  
         this.labelHigh = this.game.add.text(193, 40, "0", { font: "30px Arial", fill: "#ffffff" });  
         this.labelHigh.anchor.setTo(0.1, 0.1);
 		this.labelHightxt.fontWeight = 'bold';
@@ -620,7 +717,7 @@ var mainState = {
         this.labelJumps.text = this.jump_set;
 		
 	// Display the player on the screen
-        this.player = this.game.add.sprite(100, 100, 'player');
+        this.player = this.game.add.sprite(100, 200, 'player');
 		console.log("we will load " + localStorage.player);
 	
 		if (localStorage.player == 'yo')
@@ -642,16 +739,12 @@ var mainState = {
 
     // This function is called 60 times per second
     update: function() {
-	//set high score
-	var High = localStorage.high;
-	this.labelHigh.text = High;
-	
-	if (High > 9)
-	{
-		this.labelHigh.destroy();
-		this.labelHigh = this.game.add.text(180, 40, High, { font: "30px Arial", fill: "#ffffff" });  
-	}
 
+	this.starting1.body.velocity.x = (-260);
+	this.starting2.body.velocity.x = (-260);
+	this.starting3.body.velocity.x = (-260);
+	this.starting4.body.velocity.x = (-260);
+	
     // If the player is out of the world (too high or too low), call the 'restartGame' function
      if (this.player.inWorld == false)
         this.restartGame(); 
@@ -691,7 +784,7 @@ var mainState = {
             //scoring based on height of platform (not used)
             //this.score += parseInt(1 * (this.player.body.y / 100));
             //scoring based on how many platforms jumped
-            this.score += 0;
+            //this.score += 0;
             this.jump_set = 3;
             this.labelJumps.text = this.jump_set;
             this.labelScore.text = this.score;
@@ -718,16 +811,11 @@ var mainState = {
     },
     
     platfall: function() {
-		this.score = this.score + 1;
+		localStorage.high = Number(localStorage.high) + 1;
 		this.jump_set = 3;
 		this.labelJumps.text = this.jump_set;
-        this.labelScore.text = this.score;
-		if (this.score >localStorage.high)
-	  	{
-			localStorage.high = this.score;
-			this.labelHigh.text = localStorage.high;
-			//localStorage.high = Number(localStorage.high) + 1;
-		}
+        this.labelScore.text = localStorage.high;
+
 		this.coin.kill();
     },
 
@@ -735,12 +823,14 @@ var mainState = {
     addOneplatform: function(x, y) {
         // Get the first dead platform of our group
         var platform = this.platforms.getFirstDead();
+		this.distance = this.distance + 1;
+		this.labelHigh.text = this.distance;
 
         // Set the new position of the platform
         platform.reset(x, y);
 
         // Add velocity to the platform to make it move left
-        platform.body.velocity.x = (-250 - (this.score * 1.5)); 
+        platform.body.velocity.x = (-260); 
 		platform.body.immovable = true;
                
         // Kill the platform when it's no longer visible 
@@ -779,7 +869,7 @@ var mainState = {
 	    this.coin = this.game.add.sprite(400, 100, 'coin');
 		game.physics.arcade.enable(this.coin);
 		// Add velocity to the coin to make it move left
-		this.coin.body.velocity.x = (-250); 
+		this.coin.body.velocity.x = (-220); 
 		this.coin.body.immovable = true;
                
         // Kill the coin when it's no longer visible 
