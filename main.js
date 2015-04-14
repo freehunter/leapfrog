@@ -802,7 +802,7 @@ var mainState = {
         this.coin.createMultiple(20, 'coin');		
 		
 	// Create flappy platforms
-	if (localStorage.jumpNum = 20)
+	if (localStorage.jumpNum == 20)
 	{
 		this.flappy = game.add.group();
 		this.flappy.enableBody = true;
