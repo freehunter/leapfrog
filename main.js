@@ -1156,7 +1156,7 @@ var mainState = {
         this.timer = this.game.time.events.loop(1300, this.addRowOfclouds, this); 
 
 	// Timer that calls 'addacoin' every x milliseconds
-        this.timer = this.game.time.events.loop(1200, this.addacoin, this);
+        this.timer = this.game.time.events.loop(1500, this.addacoin, this);
 		console.log(starSpeed);
 	
 	// Timer that calls 'addRowOfFlappy' every x milliseconds
@@ -1321,7 +1321,7 @@ var mainState = {
     platfall: function() {
     //player touches a coin
 		localStorage.high = Number(localStorage.high) + 1;
-		//this.jump_set = this.jump_set + 1;
+		this.jump_set = this.jump_set + 1;
 		this.labelJumps.text = this.jump_set;
         this.labelScore.text = localStorage.high;
 
