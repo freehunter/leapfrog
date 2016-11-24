@@ -14,7 +14,12 @@ Coins give +1 points and let you triple jump again
 
 TODO:  
 Add basic sounds
+
 Add more store items
+
+Add more ways to get money
+
+Make game speed up as level goes on
 
 
 Game made in Phaser.js
