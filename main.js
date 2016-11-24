@@ -448,6 +448,7 @@ showTutorial: function() {
 disablePoopy: function() {
 	localStorage.poopy = 0;
 	this.labelPoopy.text = "Poopy Disabled";
+	localStorage.high = Number(localStorage.high) + 5;
 	//this.labelPoopy.inputEnabled = false;
 	console.log(localStorage.poopy);
 },
@@ -470,6 +471,18 @@ if (localStorage.high) {
 	localStorage.high = Number(localStorage.high) + 0;
 } else {
 	localStorage.high = 0;
+}
+
+if (localStorage.tutorial) {
+	localStorage.tutorial = Number(localStorage.tutorial) + 0;
+} else {
+	localStorage.tutorial = 0;
+}
+
+if (localStorage.poopy) {
+	localStorage.poopy = Number(localStorage.poopy) + 0;
+} else {
+	localStorage.poopy = 0;
 }
 
 if (localStorage.player) {
@@ -1303,6 +1316,7 @@ var mainState = {
     },
     
     platfall: function() {
+    //player touches a coin
 		localStorage.high = Number(localStorage.high) + 1;
 		this.jump_set = this.jump_set + 1;
 		this.labelJumps.text = this.jump_set;
@@ -1358,13 +1372,13 @@ var mainState = {
 
 	// Add a random coin
     addacoin: function() {
-	    this.coin = this.game.add.sprite(400, 100, 'coin');
+	    this.coin = this.game.add.sprite(400, 120, 'coin');
 		game.physics.arcade.enable(this.coin);
 		// Add velocity to the coin to make it move left
 		this.coin.body.velocity.x = (-220); 
 		this.coin.body.immovable = true;
 		//make the stars come faster as the level goes on - disabled
-		//starSpeed = (starSpeed - this.distance / 10 - (localStorage.high / 10));
+		//starSpeed = (starSpeed - this.distance / 2 - (localStorage.high / 10));
 		console.log(starSpeed);
 		console.log(localStorage.starCall);
                
