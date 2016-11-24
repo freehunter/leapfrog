@@ -10,6 +10,12 @@ if (localStorage.high) {
 	localStorage.high = 0;
 }
 
+if (localStorage.tutorial) {
+	localStorage.tutorial = Number(localStorage.tutorial) + 0;
+} else {
+	localStorage.tutorial = 0;
+}
+
 if (localStorage.poopy) {
 	localStorage.poopy = Number(localStorage.poopy) + 0;
 } else {
@@ -172,7 +178,11 @@ update: function(){
 },
 
 startGame: function() {
-	game.state.start('main');
+	if (localStorage.tutorial == 1) {
+		game.state.start('main');
+	} else {
+		game.state.start('tutorial');
+	}		
 },
 
 clickpop: function(item) {
@@ -192,6 +202,119 @@ cheatMoney: function(item) {
 },
 
 }
+
+var tutorialState = {
+	
+preload: function() {
+	// Load the player sprite
+    game.load.spritesheet('player', 'assets/player.png', 32, 48);
+},
+
+create: function() {
+	var High = localStorage.high;
+	// Display the player on the screen
+    this.player = this.game.add.sprite(100, 100, 'player');
+	console.log("we will load " + localStorage.player);
+	
+    if (localStorage.player == 'yo')
+	{
+	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	console.log("we loaded the sprite yo")
+	}
+	else if (localStorage.player == 'chicken')
+	{
+	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+	console.log("we loaded the sprite chicken")
+	}
+    
+    // Add gravity to the player to make it fall
+    game.physics.arcade.enable(this.player);
+    this.player.body.gravity.y = 400; 
+
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    game.scale.setShowAll();
+    game.scale.refresh();
+    game.scale.setScreenSize(true);
+
+	game.stage.backgroundColor = '#71c5cf';
+ 
+    this.labelTitle = this.game.add.text(190, 70, "Leap Frog", { font: "60px Arial Black"});
+	this.labelTitle.fontWeight = 'bold';
+	this.labelTitle.fontSize = 50;
+	this.labelTitle.stroke = '#000000';
+	this.labelTitle.strokeThickness = 6;
+	this.labelTitle.fill = '#ffffff';
+	twist = 1;
+	this.labelTitle.anchor.set(0.5);
+	
+	this.labelCharacters = this.game.add.text(100, 120, "1. Tap to jump", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelCharacters.fontWeight = 'bold';
+	this.labelCharacters.stroke = '#000000';
+	this.labelCharacters.strokeThickness = 6;
+	this.labelCharacters.fill = '#ffffff';
+	this.labelShop = this.game.add.text(100, 170, "2. Don't fall behind!", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelShop.fontWeight = 'bold';
+	this.labelShop.stroke = '#000000';
+	this.labelShop.strokeThickness = 6;
+	this.labelShop.fill = '#ffffff';
+	this.labelSettings = this.game.add.text(100, 220, "3. Collect the coins!", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelSettings.fontWeight = 'bold';
+	this.labelSettings.stroke = '#000000';
+	this.labelSettings.strokeThickness = 6;
+	this.labelSettings.fill = '#ffffff';
+	this.labelStart = this.game.add.text(150, 300, "Got it!", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelStart.fontWeight = 'bold';
+	this.labelStart.stroke = '#000000';
+	this.labelStart.strokeThickness = 6;
+	this.labelStart.fill = '#ffffff';
+	this.labelScore = this.game.add.text(150, 440, ("Coins: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore.fontWeight = 'bold';
+	this.labelScore.stroke = '#000000';
+	this.labelScore.strokeThickness = 6;
+	this.labelScore.fill = '#ffffff';
+	
+	this.labelStart.inputEnabled = true;
+	this.labelStart.events.onInputDown.add(this.startGame, this);
+	
+},
+
+update: function(){
+	if (this.player.y > 430) {
+		this.player.body.velocity.y = -450;
+	}
+	this.player.animations.play('right');
+	
+	if (this.labelTitle.angle < -10)
+	{
+		twist = 1;
+	}
+	
+	if (this.labelTitle.angle > 10)
+	{
+		twist = 0;
+	}
+	if (twist == 1)
+	{
+		this.labelTitle.rotateSpeed = .5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	if (twist == 0)
+	{
+		this.labelTitle.rotateSpeed = -.5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	//console.log(this.labelTitle.angle);
+},
+
+startGame: function() {
+		localStorage.tutorial = 1;
+		game.state.start('main');	
+},
+
+}
+
 
 var settingsState = {
 
@@ -217,11 +340,21 @@ create: function() {
 	this.labelTitle.strokeThickness = 6;
 	this.labelTitle.fill = '#ffffff';
 	this.labelTitle.anchor.set(0.5);
-	this.labelClear = this.game.add.text(150, 170, "Clear All", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelTutorial = this.game.add.text(150, 170, "Show Tutorial", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelTutorial.fontWeight = 'bold';
+	this.labelTutorial.stroke = '#000000';
+	this.labelTutorial.strokeThickness = 6;
+	this.labelTutorial.fill = '#ffffff';
+	this.labelClear = this.game.add.text(150, 220, "Clear All", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelClear.fontWeight = 'bold';
 	this.labelClear.stroke = '#000000';
 	this.labelClear.strokeThickness = 6;
 	this.labelClear.fill = '#ffffff';
+	this.labelPoopy = this.game.add.text(150, 270, "Disable Poopy", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelPoopy.fontWeight = 'bold';
+	this.labelPoopy.stroke = '#000000';
+	this.labelPoopy.strokeThickness = 6;
+	this.labelPoopy.fill = '#ffffff';
 	this.labelSure = this.game.add.text(200, 170, "Are you sure?", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelSure.fontWeight = 'bold';
 	this.labelSure.stroke = '#000000';
@@ -245,7 +378,7 @@ create: function() {
 	this.labelMenu.stroke = '#000000';
 	this.labelMenu.strokeThickness = 6;
 	this.labelMenu.fill = '#ffffff';
-	this.labelStart = this.game.add.text(100, 340, "About Leap Frog", { font: "40px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelStart = this.game.add.text(150, 340, "About", { font: "40px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelStart.fontWeight = 'bold';
 	this.labelStart.stroke = '#000000';
 	this.labelStart.strokeThickness = 6;
@@ -259,9 +392,16 @@ create: function() {
 	this.labelSure.visible = false;
 	this.labelYes.visible = false;
 	this.labelGodNo.visible = false;
+	if (localStorage.poopy == 0) {
+		this.labelPoopy.visible = false;
+	} else {
+		this.labelPoopy.visible = true;
+	}
 	
 	this.labelClear.inputEnabled = true;
 	this.labelClear.events.onInputDown.add(this.clearScore, this);
+	this.labelTutorial.inputEnabled = true;
+	this.labelTutorial.events.onInputDown.add(this.showTutorial, this);
 	this.labelMenu.inputEnabled = true;
 	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
 	this.labelYes.inputEnabled = true;
@@ -270,6 +410,8 @@ create: function() {
 	this.labelGodNo.events.onInputDown.add(this.returnMenu, this);
 	this.labelStart.inputEnabled = true;
 	this.labelStart.events.onInputDown.add(this.aboutMenu, this);
+	this.labelPoopy.inputEnabled = true;
+	this.labelPoopy.events.onInputDown.add(this.disablePoopy, this);
 	
 	// Display the player on the screen
     this.player = this.game.add.sprite(100, 100, 'player');
@@ -299,8 +441,22 @@ aboutMenu: function() {
 	game.state.start('about');
 },
 
+showTutorial: function() {
+	game.state.start('tutorial');
+},
+
+disablePoopy: function() {
+	localStorage.poopy = 0;
+	this.labelPoopy.text = "Poopy Disabled";
+	//this.labelPoopy.inputEnabled = false;
+	console.log(localStorage.poopy);
+},
+
 clearScore: function() {
 	this.labelClear.visible = false;
+	this.labelPoopy.visible = false;
+	this.labelStart.visible = false;
+	this.labelTutorial.visible = false;
 	this.labelSure.visible = true;
 	this.labelYes.visible = true;
 	this.labelYes.inputEnabled = true;
@@ -675,7 +831,7 @@ create: function() {
 	this.labelMenu.strokeThickness = 6;
 	this.labelMenu.fill = '#ffffff';
 	this.labelMenu.inputEnabled = true;
-	this.labelMessage = this.game.add.text(100, 300, ("Not enough coins!") , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMessage = this.game.add.text(100, 350, ("Not enough coins!") , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMessage.fontWeight = 'bold';
 	this.labelMessage.stroke = '#000000';
 	this.labelMessage.strokeThickness = 6;
@@ -857,12 +1013,15 @@ makeMoreCoins: function() {
 },
 makePoopy: function() {
 	this.labelMessage.visible = false;
-	if (localStorage.high >= 5)
+	if (localStorage.high >= 5 && localStorage.poopy == 0)
 	{
 		localStorage.high = Number(localStorage.high) - 5;
 		localStorage.poopy = 1;
+		console.log("poopy = ", localStorage.poopy);
 		this.labelPoopy.text = "SOLD OUT!";
 		this.labelPoopy.inputEnabled = false;
+	} else if (localStorage.high < 5) {
+		this.labelMessage.visible = true;
 	}
 },
 makeMoreJumps: function() {
@@ -1246,6 +1405,7 @@ var mainState = {
 // Add and start the 'main' state to start the game
 game.state.add('main', mainState);  
 game.state.add('about', aboutState);
+game.state.add('tutorial', tutorialState);
 game.state.add('menu', menuState);
 game.state.add('settings', settingsState);
 game.state.add('character', characterState);
