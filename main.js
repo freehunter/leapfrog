@@ -1,6 +1,6 @@
-//Frog
-//Testing an infinite runner with random ground
-//v0.4
+//Leap Frog
+//Infinite runner (jumper?) with random ground
+//v0.9.1
 
 var game = new Phaser.Game(400, 490, Phaser.CANVAS, 'gameDiv');
 
@@ -8,6 +8,12 @@ if (localStorage.high) {
 	localStorage.high = Number(localStorage.high) + 0;
 } else {
 	localStorage.high = 0;
+}
+
+if (localStorage.poopy) {
+	localStorage.poopy = Number(localStorage.poopy) + 0;
+} else {
+	localStorage.poopy = 0;
 }
 
 if (localStorage.player) {
@@ -51,8 +57,6 @@ var menuState = {
 preload: function() {
 	// Load the player sprite
     game.load.spritesheet('player', 'assets/player.png', 32, 48);
-	//load the font
-	//game.load.bitmapFont('font', 'assets/carrier_command.png', 'assets/carrier_command.xml');
 },
 
 create: function() {
@@ -83,7 +87,6 @@ create: function() {
 
 	game.stage.backgroundColor = '#71c5cf';
  
-	//game.load.bitmapFont('font', 'assets/carrier_command.png', 'assets/carrier_command.xml');
     this.labelTitle = this.game.add.text(190, 70, "Leap Frog", { font: "60px Arial Black"});
 	this.labelTitle.fontWeight = 'bold';
 	this.labelTitle.fontSize = 50;
@@ -93,7 +96,6 @@ create: function() {
 	twist = 1;
 	this.labelTitle.anchor.set(0.5);
 	
-	//this.labelTitle = this.game.add.bitmapText(100, 100, 'carrier_command','Drag me around !',34);
 	this.labelCharacters = this.game.add.text(150, 120, "Characters", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelCharacters.fontWeight = 'bold';
 	this.labelCharacters.stroke = '#000000';
@@ -192,6 +194,11 @@ cheatMoney: function(item) {
 }
 
 var settingsState = {
+
+preload: function() {
+	// Load the player sprite
+    game.load.spritesheet('player', 'assets/player.png', 32, 48);
+},
 	
 create: function() {
 
@@ -238,6 +245,11 @@ create: function() {
 	this.labelMenu.stroke = '#000000';
 	this.labelMenu.strokeThickness = 6;
 	this.labelMenu.fill = '#ffffff';
+	this.labelStart = this.game.add.text(100, 340, "About Leap Frog", { font: "40px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelStart.fontWeight = 'bold';
+	this.labelStart.stroke = '#000000';
+	this.labelStart.strokeThickness = 6;
+	this.labelStart.fill = '#ffffff';
 	this.labelScore = this.game.add.text(150, 440, ("Coins: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelScore.fontWeight = 'bold';
 	this.labelScore.stroke = '#000000';
@@ -256,10 +268,35 @@ create: function() {
 	this.labelYes.events.onInputDown.add(this.clearScoreReally, this);
 	this.labelGodNo.inputEnabled = true;
 	this.labelGodNo.events.onInputDown.add(this.returnMenu, this);
+	this.labelStart.inputEnabled = true;
+	this.labelStart.events.onInputDown.add(this.aboutMenu, this);
+	
+	// Display the player on the screen
+    this.player = this.game.add.sprite(100, 100, 'player');
+	console.log("we will load " + localStorage.player);
+	
+    if (localStorage.player == 'yo')
+	{
+	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	console.log("we loaded the sprite yo")
+	}
+	else if (localStorage.player == 'chicken')
+	{
+	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+	console.log("we loaded the sprite chicken")
+	}
+	// Add gravity to the player to make it fall
+    game.physics.arcade.enable(this.player);
+    this.player.body.gravity.y = 400; 
+
 },
 
 returnMenu: function() {
 	game.state.start('menu');
+},
+
+aboutMenu: function() {
+	game.state.start('about');
 },
 
 clearScore: function() {
@@ -313,6 +350,10 @@ if (localStorage.jumpNum) {
 },
 
 update: function() {
+	if (this.player.y > 430) {
+		this.player.body.velocity.y = -450;
+	}
+	this.player.animations.play('right');
 	if (this.labelTitle.angle < -10)
 	{
 		twist = 1;
@@ -335,6 +376,111 @@ update: function() {
 		this.labelTitle.angle += this.labelTitle.rotateSpeed;
 	}
 }
+
+}
+
+var aboutState = {
+preload: function() {
+	// Load the player sprite
+    game.load.spritesheet('player', 'assets/player.png', 32, 48);
+},
+create: function() {
+
+
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    game.scale.setShowAll();
+    game.scale.refresh();
+    game.scale.setScreenSize(true);
+
+	game.stage.backgroundColor = '#71c5cf';
+       
+    this.labelTitle = this.game.add.text(190, 70, "Leap Frog", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelTitle.fontWeight = 'bold';
+	this.labelTitle.fontSize = 50;
+	this.labelTitle.stroke = '#000000';
+	this.labelTitle.strokeThickness = 6;
+	this.labelTitle.fill = '#ffffff';
+	this.labelTitle.anchor.set(0.5);
+	this.labelClear = this.game.add.text(70, 170, "Made by Mark Hunt", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelClear.fontWeight = 'bold';
+	this.labelClear.stroke = '#000000';
+	this.labelClear.strokeThickness = 6;
+	this.labelClear.fill = '#ffffff';
+	
+	this.labelYes = this.game.add.text(200, 250, "(C) 2016 2017", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelYes.fontWeight = 'bold';
+	this.labelYes.stroke = '#000000';
+	this.labelYes.strokeThickness = 6;
+	this.labelYes.fill = '#ffffff';
+	this.labelYes.anchor.set(0.5);
+
+	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelMenu.fontWeight = 'bold';
+	this.labelMenu.stroke = '#000000';
+	this.labelMenu.strokeThickness = 6;
+	this.labelMenu.fill = '#ffffff';
+	this.labelScore = this.game.add.text(150, 440, ("Coins: " +  localStorage.high) , { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelScore.fontWeight = 'bold';
+	this.labelScore.stroke = '#000000';
+	this.labelScore.strokeThickness = 6;
+	this.labelScore.fill = '#ffffff';
+	
+	this.labelMenu.inputEnabled = true;
+	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
+	
+	// Display the player on the screen
+    this.player = this.game.add.sprite(100, 100, 'player');
+	console.log("we will load " + localStorage.player);
+	
+    if (localStorage.player == 'yo')
+	{
+	this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	console.log("we loaded the sprite yo")
+	}
+	else if (localStorage.player == 'chicken')
+	{
+	this.player.animations.add('right', [0, 1, 2, 3], 10, true);
+	console.log("we loaded the sprite chicken")
+	}
+	// Add gravity to the player to make it fall
+    game.physics.arcade.enable(this.player);
+    this.player.body.gravity.y = 400; 
+
+},
+
+returnMenu: function() {
+	game.state.start('menu');
+},
+
+update: function(){
+	this.labelScore.text = ("Coins: " +  localStorage.high)
+	if (this.player.y > 430) {
+		this.player.body.velocity.y = -450;
+	}
+	this.player.animations.play('right');
+	
+	if (this.labelTitle.angle < -10)
+	{
+		twist = 1;
+	}
+	
+	if (this.labelTitle.angle > 10)
+	{
+		twist = 0;
+	}
+	if (twist == 1)
+	{
+		this.labelTitle.rotateSpeed = .5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+	if (twist == 0)
+	{
+		this.labelTitle.rotateSpeed = -.5;
+		this.labelTitle.anchor.set(0.5);
+		this.labelTitle.angle += this.labelTitle.rotateSpeed;
+	}
+},
 
 }
 
@@ -517,12 +663,12 @@ create: function() {
 	this.labelMoreJumps.strokeThickness = 6;
 	this.labelMoreJumps.fill = '#ffffff';
 	this.labelMoreJumps.inputEnabled = true;
-	this.labelNothing = this.game.add.text(150, 270, "0c Nothing", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
-	this.labelNothing.fontWeight = 'bold';
-	this.labelNothing.stroke = '#000000';
-	this.labelNothing.strokeThickness = 6;
-	this.labelNothing.fill = '#ffffff';
-	this.labelNothing.inputEnabled = true;
+	this.labelPoopy = this.game.add.text(150, 270, "5c Poopy Mode", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
+	this.labelPoopy.fontWeight = 'bold';
+	this.labelPoopy.stroke = '#000000';
+	this.labelPoopy.strokeThickness = 6;
+	this.labelPoopy.fill = '#ffffff';
+	this.labelPoopy.inputEnabled = true;
 	this.labelMenu = this.game.add.text(150, 400, "Menu", { font: "30px Arial", fill: "#ffffff", align: "center" }); 
 	this.labelMenu.fontWeight = 'bold';
 	this.labelMenu.stroke = '#000000';
@@ -548,6 +694,8 @@ create: function() {
 	this.labelMoreCoins.events.onInputDown.add(this.makeMoreCoins, this);
 	this.labelMoreJumps.inputEnabled = true;
 	this.labelMoreJumps.events.onInputDown.add(this.makeMoreJumps, this);
+	this.labelPoopy.inputEnabled = true;
+	this.labelPoopy.events.onInputDown.add(this.makePoopy, this);
 	this.labelMenu.inputEnabled = true;
 	this.labelMenu.events.onInputDown.add(this.returnMenu, this);
 
@@ -707,6 +855,16 @@ makeMoreCoins: function() {
 		}
 	}
 },
+makePoopy: function() {
+	this.labelMessage.visible = false;
+	if (localStorage.high >= 5)
+	{
+		localStorage.high = Number(localStorage.high) - 5;
+		localStorage.poopy = 1;
+		this.labelPoopy.text = "SOLD OUT!";
+		this.labelPoopy.inputEnabled = false;
+	}
+},
 makeMoreJumps: function() {
 	this.labelMessage.visible = false;
 	if (localStorage.jumpNum == 3)
@@ -767,6 +925,9 @@ var mainState = {
         
         //load the lava
         game.load.image('coin', 'assets/coin.png');
+        
+        //load the poop
+        game.load.image('poop', 'assets/poop.png');
         
     },
 
@@ -926,9 +1087,16 @@ var mainState = {
     //animate the player
     this.player.animations.play('right');
     
-    //debug to find height of player
-    //console.log(this.player.y)
-    },
+    if (this.player.body.touching.down && localStorage.poopy == 1)
+    {
+   		//add poop where the character touches
+   		this.poop = this.game.add.sprite(this.player.body.x, (this.player.body.y+22), 'poop');
+		game.physics.arcade.enable(this.poop);
+		// Add velocity to the poop to make it move left
+		this.poop.body.velocity.x = (-260); 
+		this.poop.body.immovable = true
+	}
+},
        
 
     // Make the player jump 
@@ -949,13 +1117,10 @@ var mainState = {
         //reset the double jump
         if (this.player.body.touching.down && this.player.y < 352)
         {
-            //scoring based on height of platform (not used)
-            //this.score += parseInt(1 * (this.player.body.y / 100));
-            //scoring based on how many platforms jumped
-            //this.score += 0;
             this.jump_set = Number(localStorage.jumpNum);
             this.labelJumps.text = this.jump_set;
             this.labelScore.text = this.score;
+			
             //if the score is double digits, move the counter over
             if (this.score > 9)
             {
@@ -1080,6 +1245,7 @@ var mainState = {
 
 // Add and start the 'main' state to start the game
 game.state.add('main', mainState);  
+game.state.add('about', aboutState);
 game.state.add('menu', menuState);
 game.state.add('settings', settingsState);
 game.state.add('character', characterState);
