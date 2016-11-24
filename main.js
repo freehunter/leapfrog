@@ -932,7 +932,8 @@ update: function(){
 		this.labelMoreCoins.text = "50c More Coins";
 	} else if (localStorage.starCall == 3000)
 	{
-		this.labelMoreCoins.text = "60c More Coins";
+		this.labelMoreCoins.text = "SOLD OUT";
+		//this.labelMoreCoins.text = "60c More Coins";
 	} else if (localStorage.starCall == 2000)
 	{
 		this.labelMoreCoins.text = "70c More Coins";
@@ -1130,12 +1131,9 @@ var mainState = {
         this.clouds.createMultiple(4, 'cloud');	
 
 	// Create flappy platforms
-	if (localStorage.jumpNum == 20)
-	{
 		this.flappy = game.add.group();
 		this.flappy.enableBody = true;
 		this.flappy.createMultiple(10, 'platform');
-	}
         
         //create the starting platform
 		this.starting1 = this.platforms.create(10, 300, 'platform')
@@ -1160,10 +1158,8 @@ var mainState = {
 		console.log(starSpeed);
 	
 	// Timer that calls 'addRowOfFlappy' every x milliseconds
-	if (localStorage.jumpNum == 20)
-		{	
         this.timer = this.game.time.events.loop(1300, this.addRowOfFlappy, this); 
-		}
+
 		
 	// Timer that calls 'visiblecoin' every x milliseconds
         //this.timer = this.game.time.events.loop(2000, this.visiblecoin, this); 
@@ -1429,8 +1425,11 @@ var mainState = {
     // Add a platform at a random height
     addRowOfFlappy: function() {
         //this.addOneflappy(400, (Math.random()*(350-250) + 250));
+        if (this.distance > 0) {
 		this.addOneflappy(400, (Math.random() * (-400 - -250) + -250));
+		//this.addOneflappy(400, (Math.random() * (this.distance - 1000)));
 		//this.addOneflappy(400, -300);
+		}
     },	
 	
 };
