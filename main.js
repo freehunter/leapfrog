@@ -1279,8 +1279,8 @@ var mainState = {
         if (this.player.body.touching.down || this.jump_set > 0)
         {
 			jump_height = Number(localStorage.jump);
-            this.player.body.velocity.y = jump_height;
-            this.player.body.velocity.x = 7;
+            this.player.body.velocity.y = jump_height-75;
+            this.player.body.velocity.x = 27 - this.player.x / 10;
             this.jump_set -= 1;
             this.labelJumps.text = this.jump_set;
             
@@ -1293,7 +1293,7 @@ var mainState = {
             this.jump_set = Number(localStorage.jumpNum);
             this.labelJumps.text = this.jump_set;
             this.labelScore.text = this.score;
-            this.player.body.velocity.x = 220;
+            this.player.body.velocity.x = 220 - this.player.body.x;
            
 			
             //if the score is double digits, move the counter over
@@ -1320,7 +1320,7 @@ var mainState = {
     
     platfall: function() {
     //player touches a coin
-		localStorage.high = Number(localStorage.high) + 1;
+		localStorage.high = Number(localStorage.high) + 3;
 		this.jump_set = this.jump_set + 1;
 		this.labelJumps.text = this.jump_set;
         this.labelScore.text = localStorage.high;
