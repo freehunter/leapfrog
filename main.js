@@ -1095,7 +1095,7 @@ var mainState = {
 		// Load the cloud sprite
         game.load.image('cloud', 'assets/cloud.png'); 
         
-        //load the lava
+        //load the coin
         game.load.image('coin', 'assets/coin.png');
         
         //load the poop
@@ -1129,11 +1129,6 @@ var mainState = {
         this.clouds.enableBody = true;
         this.clouds.createMultiple(4, 'cloud');	
 
-	// Create coins
-        this.coin = game.add.group();
-        this.coin.enableBody = true;
-        this.coin.createMultiple(20, 'coin');		
-		
 	// Create flappy platforms
 	if (localStorage.jumpNum == 20)
 	{
@@ -1160,8 +1155,8 @@ var mainState = {
 	// Timer that calls 'addRowOfclouds' every x milliseconds
         this.timer = this.game.time.events.loop(1300, this.addRowOfclouds, this); 
 
-	// Timer that calls 'addRowOfcoin' every x milliseconds
-        this.timer = this.game.time.events.loop(starSpeed, this.addacoin, this);
+	// Timer that calls 'addacoin' every x milliseconds
+        this.timer = this.game.time.events.loop(1200, this.addacoin, this);
 		console.log(starSpeed);
 	
 	// Timer that calls 'addRowOfFlappy' every x milliseconds
@@ -1250,10 +1245,11 @@ var mainState = {
         this.restartGame(); 
 		
      
+    game.physics.arcade.overlap(this.player, this.coin, this.platfall, null, this);
     game.physics.arcade.collide(this.player, this.platforms);
 	game.physics.arcade.collide(this.player, this.flappy);
     game.physics.arcade.collide(this.player, this.starting);
-	game.physics.arcade.overlap(this.player, this.coin, this.platfall, null, this);
+	
             
 
     //animate the player
@@ -1268,13 +1264,18 @@ var mainState = {
 		this.poop.body.velocity.x = (-260); 
 		this.poop.body.immovable = true
 	}
+	if (this.player.body.touching.down)
+    {
+    	this.player.body.velocity.x = 220;
+    }
+	
+	            
 },
        
 
     // Make the player jump 
     jump: function() {
         // Add a vertical velocity to the player
-		
         if (this.player.body.touching.down || this.jump_set > 0)
         {
 			jump_height = Number(localStorage.jump);
@@ -1287,11 +1288,13 @@ var mainState = {
         
         //if the player touches a block, add one to the score
         //reset the double jump
-        if (this.player.body.touching.down && this.player.y < 352)
+        if (this.player.body.touching.down)
         {
             this.jump_set = Number(localStorage.jumpNum);
             this.labelJumps.text = this.jump_set;
             this.labelScore.text = this.score;
+            this.player.body.velocity.x = 220;
+           
 			
             //if the score is double digits, move the counter over
             if (this.score > 9)
@@ -1318,11 +1321,27 @@ var mainState = {
     platfall: function() {
     //player touches a coin
 		localStorage.high = Number(localStorage.high) + 1;
-		this.jump_set = this.jump_set + 1;
+		//this.jump_set = this.jump_set + 1;
 		this.labelJumps.text = this.jump_set;
         this.labelScore.text = localStorage.high;
 
 		this.coin.kill();
+    },
+    
+    // Add a platform on the screen
+    addacoin: function() {
+
+        // Set the new position of the coin
+        this.coin = this.game.add.sprite(400, 120, 'coin');
+        game.physics.arcade.enable(this.coin);
+
+        // Add velocity to the platform to make it move left
+        this.coin.body.velocity.x = (-260); 
+		this.coin.body.immovable = false;
+               
+        // Kill the platform when it's no longer visible 
+        //this.coin.checkWorldBounds = true;
+        //this.coin.outOfBoundsKill = true;
     },
 
     // Add a platform on the screen
@@ -1343,7 +1362,7 @@ var mainState = {
         platform.checkWorldBounds = true;
         platform.outOfBoundsKill = true;
     },
-
+    
     // Add a platform at a random height
     addRowOfplatforms: function() {
         this.addOneplatform(400, (Math.random()*(350-250) + 250));
@@ -1370,7 +1389,7 @@ var mainState = {
         this.addOneCloud(400, (Math.random()*(150-10) + 10));
     },
 
-	// Add a random coin
+	/*// Add a random coin
     addacoin: function() {
 	    this.coin = this.game.add.sprite(400, 120, 'coin');
 		game.physics.arcade.enable(this.coin);
@@ -1385,7 +1404,7 @@ var mainState = {
         // Kill the coin when it's no longer visible 
         this.coin.checkWorldBounds = true;
         this.coin.outOfBoundsKill = true;
-    },
+    },*/
 	
     // Add a flappy platform on the screen
     addOneflappy: function(x, y) {
